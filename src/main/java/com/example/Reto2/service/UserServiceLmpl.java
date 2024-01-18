@@ -2,6 +2,7 @@ package com.example.Reto2.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,5 +46,12 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 	public Iterable<User> findAll() {
 		return userRepository.findAll();
 	}
+	@Override
+	public Optional<User> findBy(Integer id) {
+		return userRepository.findById(id);
+	}
 
+	public User update(User user) {
+		return userRepository.save(user);
+	}
 }

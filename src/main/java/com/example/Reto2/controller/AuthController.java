@@ -1,5 +1,7 @@
 package com.example.Reto2.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.Reto2.configuration.JwtTokenUtil;
 import com.example.Reto2.model.AuthRequest;
 import com.example.Reto2.model.AuthResponse;
+import com.example.Reto2.model.UpdateResponse;
 import com.example.Reto2.model.User;
 import com.example.Reto2.service.UserService;
 
@@ -37,6 +41,24 @@ public class AuthController {
 	@GetMapping("/auth/users")
 	public ResponseEntity<?> users() {
 		return ResponseEntity.ok().body(userService.findAll());
+	}
+	@PutMapping("/auth/users")
+	public ResponseEntity<User> updateUser(Authentication authentication, @RequestBody UpdateResponse updateResponse){
+		User userDetails = (User) authentication.getPrincipal();
+
+		User user= convertUserResponseToUser(updateResponse , userDetails.getId());
+		user= userService.update(user);
+		return new ResponseEntity<User>(user,HttpStatus.CREATED);
+	}
+
+
+	private User convertUserResponseToUser(UpdateResponse userResponse, Integer id) {
+		
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String password = passwordEncoder.encode(userResponse.getPassword());
+		
+		User user = new User(id,userResponse.getEmail(),password,userResponse.getName(),userResponse.getSurname(),userResponse.getPhone(),userResponse.getDni(),userResponse.getAddress());
+		return user;
 	}
 	
 	@PostMapping("/auth/login")
@@ -97,6 +119,23 @@ public class AuthController {
 		// de ahi que sea "/me" en el ejemplo 
 		
 		return ResponseEntity.ok().body(userDetails);
+	}
+	
+	@GetMapping("/auth/myInfo")
+	public ResponseEntity<?> findById(Authentication authentication) {
+		// aqui podemos castearlo a UserDetails o User. El UserDetails es una interfaz, 
+		// si lo casteamos a la interfaz no podremos sacar campos como la ID del usuario
+		User userDetails = (User) authentication.getPrincipal();
+		Optional<User> response = userService.findBy(userDetails.getId());
+		// IMPORTANTE: por lo tanto, la ID del usuario no tiene que ir como parametro en la peticion del usuario
+		
+		// aqui podriamos devolver datos del usuario. quizá no sea lo que queremos devolver o no lo querramos devolver
+		// es un ejemplo por que con userDetails.getId() tendríamos la ID del usuario sin que la pase por parametro
+		// necesario en algunos servicios: si quiero devolver una lista o elemento privado del usuario, no voy a querer
+		// que el usuario mande su ID por parametro. Ya que es trampeable.
+		// de ahi que sea "/me" en el ejemplo 
+		
+		return ResponseEntity.ok().body(response);
 	}
 	
 }

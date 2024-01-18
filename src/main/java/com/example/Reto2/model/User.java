@@ -32,9 +32,20 @@ public class User implements UserDetails {
 	private String email;
 	@Column(length = 120)
 	private String password;
+	@Column(length = 100)
+	private String name;
+	@Column(length = 100)
+	private String surname;
+	@Column(length = 10)
+	private Integer phone;
+	@Column(length = 10)
+	private String dni;
+	
+	@Column(length = 100)
+	private String address;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "role_users",
+	@JoinTable(name = "role_user",
 			// relacion con tabla actual (user)
 			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_id")),
 			// relacion con la otra tabla (List<Role>)
@@ -67,7 +78,18 @@ public class User implements UserDetails {
 		this.email = email;
 		this.password = password;
 	}
-	
+	public User(Integer id, String email, String password, String name, String surname, Integer phone, String dni,
+			String address) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.surname = surname;
+		this.phone = phone;
+		this.dni = dni;
+		this.address = address;
+	}
 	public User(Integer id, String email, String password, List<Role> roles, List<Chat> chats) {
 		super();
 		this.id = id;
@@ -77,6 +99,46 @@ public class User implements UserDetails {
 		this.chats = chats;
 	}
 
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	public Integer getPhone() {
+		return phone;
+	}
+
+	public void setPhone(Integer phone) {
+		this.phone = phone;
+	}
+
+	public String getDni() {
+		return dni;
+	}
+
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
 	public Integer getId() {
 		return id;
