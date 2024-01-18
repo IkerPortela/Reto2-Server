@@ -26,10 +26,6 @@ public class Message {
 	@Column()
 	private String imagePath;
 	@Column()
-	private double latitude;
-	@Column()
-	private double longtitude;
-	@Column()
 	private boolean isSend;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -42,115 +38,122 @@ public class Message {
 	private Integer userId;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "group_id", foreignKey=@ForeignKey(name = "Fk_group_id"))
+	@JoinColumn(name = "chat_id", foreignKey=@ForeignKey(name = "Fk_chat_id"))
 	@JsonManagedReference
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-	private Group group;
+	private Chat chat;
 	
-	@Column(name = "group_id", insertable=false, updatable=false)
-	private Integer groupId;
+	@Column(name = "chat_id", insertable=false, updatable=false)
+	private Integer chatId;
 	@Column()
 	private String createdAt;
 	@Column
 	private String updatedAt;
 	
 	public Message() {}
-	public Message(Integer id, String text, String imagePath, double latitude, double longtitude, boolean isSend,
-			User user, Integer userId, Group group, Integer groupId, String createdAt, String updatedAt) {
+
+	public Message(Integer id, String text, String imagePath, boolean isSend,
+			User user, Integer userId, Chat chat, Integer chatId, String createdAt, String updatedAt) {
 		super();
 		this.id = id;
 		this.text = text;
 		this.imagePath = imagePath;
-		this.latitude = latitude;
-		this.longtitude = longtitude;
 		this.isSend = isSend;
 		this.user = user;
 		this.userId = userId;
-		this.group = group;
-		this.groupId = groupId;
+		this.chat = chat;
+		this.chatId = chatId;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public String getText() {
 		return text;
 	}
+
 	public void setText(String text) {
 		this.text = text;
 	}
+
 	public String getImagePath() {
 		return imagePath;
 	}
+
 	public void setImagePath(String imagePath) {
 		this.imagePath = imagePath;
 	}
-	public double getLatitude() {
-		return latitude;
-	}
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
-	public double getLongtitude() {
-		return longtitude;
-	}
-	public void setLongtitude(double longtitude) {
-		this.longtitude = longtitude;
-	}
+
 	public boolean isSend() {
 		return isSend;
 	}
+
 	public void setSend(boolean isSend) {
 		this.isSend = isSend;
 	}
+
 	public User getUser() {
 		return user;
 	}
+
 	public void setUser(User user) {
 		this.user = user;
 	}
+
 	public Integer getUserId() {
 		return userId;
 	}
+
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
-	public Group getGroup() {
-		return group;
+
+	public Chat getChat() {
+		return chat;
 	}
-	public void setGroup(Group group) {
-		this.group = group;
+
+	public void setChat(Chat chat) {
+		this.chat = chat;
 	}
-	public Integer getGroupId() {
-		return groupId;
+
+	public Integer getChatId() {
+		return chatId;
 	}
-	public void setGroupId(Integer groupId) {
-		this.groupId = groupId;
+
+	public void setChatId(Integer chatId) {
+		this.chatId = chatId;
 	}
+
 	public String getCreatedAt() {
 		return createdAt;
 	}
+
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
 	}
+
 	public String getUpdatedAt() {
 		return updatedAt;
 	}
+
 	public void setUpdatedAt(String updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+
 	@Override
 	public String toString() {
-		return "Message [id=" + id + ", text=" + text + ", imagePath=" + imagePath + ", latitude=" + latitude
-				+ ", longtitude=" + longtitude + ", isSend=" + isSend + ", user=" + user + ", userId=" + userId
-				+ ", group=" + group + ", groupId=" + groupId + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+		return "Message [id=" + id + ", text=" + text + ", imagePath=" + imagePath  + ", isSend=" + isSend + ", user=" + user + ", userId=" + userId
+				+ ", chat=" + chat + ", chatId=" + chatId + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
 				+ "]";
 	}
+	
 	
 	
 

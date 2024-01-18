@@ -20,8 +20,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "'groups'")
-public class Group {
+@Table(name = "chats")
+public class Chat {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,36 +31,33 @@ public class Group {
 	@Column()
 	private boolean isPrivate;
 	@Column()
-	private String messageId;
-	@Column()
 	private String createdAt;
 	@Column()
-	private String updateAt;
+	private String updatedAt;
 	
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "groups_users",
-            // relacion con tabla actual (group)
-            joinColumns = @JoinColumn(name = "group_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_group_id")),
-            // relacion con la otra tabla (List<User>)
+    @JoinTable(name = "chats_users",
+            joinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_chat_id")),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_id")))
     @JsonIgnore
     private List<User> users;
     
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonBackReference
     private List<Message> messages;
     
-    public Group() {}
-	public Group(Integer id, String name, boolean isPrivate, String messageId, String createdAt, String updateAt,
-			List<User> users) {
+    public Chat() {}
+
+	public Chat(Integer id, String name, boolean isPrivate, String createdAt, String updatedAt,
+			List<User> users, List<Message> messages) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.isPrivate = isPrivate;
-		this.messageId = messageId;
 		this.createdAt = createdAt;
-		this.updateAt = updateAt;
+		this.updatedAt = updatedAt;
 		this.users = users;
+		this.messages = messages;
 	}
 
 	public Integer getId() {
@@ -87,14 +84,6 @@ public class Group {
 		this.isPrivate = isPrivate;
 	}
 
-	public String getMessageId() {
-		return messageId;
-	}
-
-	public void setMessageId(String messageId) {
-		this.messageId = messageId;
-	}
-
 	public String getCreatedAt() {
 		return createdAt;
 	}
@@ -103,12 +92,12 @@ public class Group {
 		this.createdAt = createdAt;
 	}
 
-	public String getUpdateAt() {
-		return updateAt;
+	public String getUpdatedAt() {
+		return updatedAt;
 	}
 
-	public void setUpdateAt(String updateAt) {
-		this.updateAt = updateAt;
+	public void setUpdatedAt(String updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	public List<User> getUsers() {
@@ -117,6 +106,21 @@ public class Group {
 
 	public void setUsers(List<User> users) {
 		this.users = users;
+	}
+
+	public List<Message> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<Message> messages) {
+		this.messages = messages;
+	}
+
+	@Override
+	public String toString() {
+		return "Group [id=" + id + ", name=" + name + ", isPrivate=" + isPrivate + ", createdAt=" 
+	+ createdAt + ", updatedAt=" + updatedAt + ", users=" + users + ", messages=" + messages
+				+ "]";
 	}
 	
 }

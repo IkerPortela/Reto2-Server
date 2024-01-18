@@ -41,6 +41,16 @@ public class User implements UserDetails {
 			inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_role_id")))
 	@JsonIgnore
 	private List<Role> roles;
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "chats_users",
+			// relacion con tabla actual (user)
+			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_id")),
+			// relacion con la otra tabla (List<Chat>)
+			inverseJoinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_chat_id")))
+	@JsonIgnore
+	private List<Chat> chats;
+
 
 	public User() {
 	}
@@ -57,6 +67,16 @@ public class User implements UserDetails {
 		this.email = email;
 		this.password = password;
 	}
+	
+	public User(Integer id, String email, String password, List<Role> roles, List<Chat> chats) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.roles = roles;
+		this.chats = chats;
+	}
+
 
 	public Integer getId() {
 		return id;
@@ -127,6 +147,14 @@ public class User implements UserDetails {
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
+	
+	public List<Chat> getChats() {
+		return chats;
+	}
+
+	public void setChats(List<Chat> chats) {
+		this.chats = chats;
+	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -134,7 +162,9 @@ public class User implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", password=" + password + ", roles=" + roles + "]";
+		return "User [id=" + id + ", email=" + email + ", password=" + password + ", roles=" + roles + ", chats="
+				+ chats + "]";
 	}
+
 
 }

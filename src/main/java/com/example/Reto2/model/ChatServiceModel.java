@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-public class GroupServiceModel {
+public class ChatServiceModel {
 
 	private Integer id;
 	private String name;
@@ -18,7 +18,8 @@ public class GroupServiceModel {
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<Message> messages;
 
-	public GroupServiceModel(Integer id, String name, boolean isPrivate, String createdAt, String updatedAt,
+	public ChatServiceModel() {}
+	public ChatServiceModel(Integer id, String name, boolean isPrivate, String createdAt, String updatedAt,
 			List<User> users, List<Message> messages) {
 		super();
 		this.id = id;
