@@ -1,7 +1,6 @@
 package com.example.Reto2.controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import com.example.Reto2.model.ChatPostRequest;
 import com.example.Reto2.model.ChatServiceModel;
 import com.example.Reto2.model.Message;
 import com.example.Reto2.model.MessageServiceModel;
-import com.example.Reto2.repository.ChatRepository;
 import com.example.Reto2.service.ChatService;
 import com.example.Reto2.service.MessageService;
 
@@ -62,9 +60,10 @@ public class ChatController {
 	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-//	@PostMapping("/chats")
-//	public ResponseEntity<ChatServiceModel> createChat(@RequestBody ChatPostRequest chatPostRequest){
-//		
-//		
-//	}
+	@PostMapping("/chats")
+	public ResponseEntity<ChatServiceModel> createChat(@RequestBody ChatPostRequest request){
+		Chat chat = new Chat(request.getName(),request.isPrivate());
+		chatService.createChat(chat);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }

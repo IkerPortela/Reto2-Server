@@ -31,6 +31,14 @@ public class ChatPostRequest {
 		this.users = users;
 		this.messages = messages;
 	}
+	
+	public ChatPostRequest(
+			@NotNull(message = "El nombre no puede ser nulo") @NotEmpty(message = "El nombre no puede ser vacio") @NotBlank(message = "El nombre no puede ser blanco") String name,
+			boolean isPrivate) {
+		super();
+		this.name = name;
+		this.isPrivate = isPrivate;
+	}
 	public String getName() {
 		return name;
 	}

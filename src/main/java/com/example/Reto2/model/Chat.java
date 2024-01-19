@@ -47,6 +47,16 @@ public class Chat {
     private List<Message> messages;
     
     public Chat() {}
+    
+    
+    
+	public Chat(String name, boolean isPrivate) {
+		super();
+		this.name = name;
+		this.isPrivate = isPrivate;
+	}
+
+
 
 	public Chat(Integer id, String name, boolean isPrivate, String createdAt, String updatedAt,
 			List<User> users, List<Message> messages) {
