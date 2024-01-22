@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,8 +63,8 @@ public class ChatController {
 	
 	@PostMapping("/chats")
 	public ResponseEntity<ChatServiceModel> createChat(@RequestBody ChatPostRequest request){
-		Chat chat = new Chat(request.getName(),request.isPrivate());
+		ChatServiceModel chat = new ChatServiceModel(request.getName(),request.isPrivate());
 		chatService.createChat(chat);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<ChatServiceModel>(chat,HttpStatus.OK);
 	}
 }

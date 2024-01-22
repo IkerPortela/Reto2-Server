@@ -64,9 +64,9 @@ public class WebSecurityConfig {
 				.requestMatchers(HttpMethod.GET, "/api/auth/users","/api/chats/{userId}").permitAll()
 				
 				.requestMatchers(HttpMethod.PUT, "/api/auth/users").authenticated()
+				.requestMatchers(HttpMethod.POST, "/api/chats").permitAll()
 
 				.requestMatchers(HttpMethod.GET,"/api/auth/me", "/api/auth/myInfo").authenticated()
-
 				
 				.anyRequest().authenticated()
 				// .anyRequest().permitAll()

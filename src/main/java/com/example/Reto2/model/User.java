@@ -6,7 +6,10 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,6 +25,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements UserDetails {
 	private static final long serialVersionUID = 1L;
 
@@ -51,6 +55,7 @@ public class User implements UserDetails {
 			// relacion con la otra tabla (List<Role>)
 			inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_role_id")))
 	@JsonIgnore
+	@JsonManagedReference
 	private List<Role> roles;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -60,6 +65,8 @@ public class User implements UserDetails {
 			// relacion con la otra tabla (List<Chat>)
 			inverseJoinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_chat_id")))
 	@JsonIgnore
+    @JsonBackReference
+
 	private List<Chat> chats;
 
 

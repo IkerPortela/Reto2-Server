@@ -10,7 +10,7 @@ public interface ChatService {
 	List<ChatServiceModel> getAllChatsByUserId(Integer id);
 	List<ChatServiceModel> getAllPrivateChats();
 	List<ChatServiceModel> getAllPublicChats();
-	ChatServiceModel createChat(Chat chat);
+	ChatServiceModel createChat(ChatServiceModel chat);
 	ChatServiceModel updateChat(Chat chat);
 	void deleteChatById(Integer id);
 }

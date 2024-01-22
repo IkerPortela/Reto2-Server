@@ -2,8 +2,9 @@ package com.example.Reto2.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -21,6 +22,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "chats")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Chat {
 
 	@Id
@@ -29,7 +31,7 @@ public class Chat {
 	@Column()
 	private String name;
 	@Column()
-	private boolean isPrivate;
+	private boolean is_private;
 	@Column()
 	private String createdAt;
 	@Column()
@@ -40,10 +42,12 @@ public class Chat {
             joinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_chat_id")),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_id")))
     @JsonIgnore
+    @JsonManagedReference
     private List<User> users;
     
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonIgnore
+    @JsonManagedReference
     private List<Message> messages;
     
     public Chat() {}
@@ -53,7 +57,7 @@ public class Chat {
 	public Chat(String name, boolean isPrivate) {
 		super();
 		this.name = name;
-		this.isPrivate = isPrivate;
+		this.is_private = isPrivate;
 	}
 
 
@@ -63,7 +67,7 @@ public class Chat {
 		super();
 		this.id = id;
 		this.name = name;
-		this.isPrivate = isPrivate;
+		this.is_private = isPrivate;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.users = users;
@@ -87,11 +91,11 @@ public class Chat {
 	}
 
 	public boolean isPrivate() {
-		return isPrivate;
+		return is_private;
 	}
 
 	public void setPrivate(boolean isPrivate) {
-		this.isPrivate = isPrivate;
+		this.is_private = isPrivate;
 	}
 
 	public String getCreatedAt() {
@@ -128,7 +132,7 @@ public class Chat {
 
 	@Override
 	public String toString() {
-		return "Group [id=" + id + ", name=" + name + ", isPrivate=" + isPrivate + ", createdAt=" 
+		return "Group [id=" + id + ", name=" + name + ", isPrivate=" + is_private + ", createdAt=" 
 	+ createdAt + ", updatedAt=" + updatedAt + ", users=" + users + ", messages=" + messages
 				+ "]";
 	}

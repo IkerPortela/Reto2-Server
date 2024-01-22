@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.Reto2.model.Chat;
+import com.example.Reto2.model.ChatPostRequest;
 import com.example.Reto2.model.ChatServiceModel;
 import com.example.Reto2.model.User;
 import com.example.Reto2.repository.ChatRepository;
@@ -90,16 +91,14 @@ public class ChatServiceImpl implements ChatService{
 	}
 
 	@Override
-	public ChatServiceModel createChat(Chat chat) {
-	    return new ChatServiceModel(
-	    		chat.getId(),
-	    		chat.getName(),
-	    		chat.isPrivate(),
-	    		chat.getCreatedAt(),
-	    		chat.getUpdatedAt(),
-	    		chat.getUsers(),
-	    		chat.getMessages()
-	    		);
+	public ChatServiceModel createChat(ChatServiceModel chatServiceModel) {
+		Chat chat = new Chat(chatServiceModel.getName(),chatServiceModel.isPrivate());
+		Chat chatResponse = chatRepository.save(chat);
+		ChatServiceModel response = new ChatServiceModel(
+				chatResponse.getName(),
+				chatResponse.isPrivate());
+		return response ;
+	
 	}
 
 	@Override
