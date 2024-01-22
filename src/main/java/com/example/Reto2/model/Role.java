@@ -19,7 +19,7 @@ public class Role {
 	
 
 	public Role() {}
-	public Role(Integer id, String name) {
+	public Role(Integer id, String name, RoleEnum roleType) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -37,7 +37,6 @@ public class Role {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
 	@Override
 	public String toString() {
 		return "Role [id=" + id + ", name=" + name + "]";

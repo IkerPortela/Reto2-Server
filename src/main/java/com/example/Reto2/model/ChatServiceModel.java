@@ -6,7 +6,7 @@ public class ChatServiceModel {
 
 	private Integer id;
 	private String name;
-	private boolean is_private;
+	private boolean isPrivate;
 	private String createdAt;
 	private String updatedAt;
 
@@ -24,7 +24,7 @@ public class ChatServiceModel {
 		super();
 		this.id = id;
 		this.name = name;
-		this.is_private = isPrivate;
+		this.isPrivate = isPrivate;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.users = users;
@@ -35,7 +35,7 @@ public class ChatServiceModel {
 		super();
 
 		this.name = name;
-		this.is_private = isPrivate;
+		this.isPrivate = isPrivate;
 	}
 
 	public Integer getId() {
@@ -55,11 +55,11 @@ public class ChatServiceModel {
 	}
 
 	public boolean isPrivate() {
-		return is_private;
+		return isPrivate;
 	}
 
 	public void setPrivate(boolean isPrivate) {
-		this.is_private = isPrivate;
+		this.isPrivate = isPrivate;
 	}
 
 	public String getCreatedAt() {
@@ -96,7 +96,7 @@ public class ChatServiceModel {
 
 	@Override
 	public String toString() {
-		return "GroupServiceModel [id=" + id + ", name=" + name + ", isPrivate=" + is_private + ", createdAt="
+		return "GroupServiceModel [id=" + id + ", name=" + name + ", isPrivate=" + isPrivate + ", createdAt="
 				+ createdAt + ", updatedAt=" + updatedAt + ", users=" + users + ", messages=" + messages + "]";
 	}
 }
