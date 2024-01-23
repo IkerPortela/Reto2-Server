@@ -22,7 +22,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "chats")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Chat {
 
 	@Id

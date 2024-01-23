@@ -67,4 +67,8 @@ public class ChatController {
 		chatService.createChat(chat);
 		return new ResponseEntity<ChatServiceModel>(chat,HttpStatus.OK);
 	}
+	
+	 
+	
+	
 }
