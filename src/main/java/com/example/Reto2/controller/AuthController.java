@@ -64,7 +64,7 @@ public class AuthController {
 	
 	@PostMapping("/auth/login")
 	public ResponseEntity<?> login(@RequestBody @Valid AuthRequest request) {
-		System.out.println(request.getEmail()+ request.getPassword());
+		System.out.println(request.getEmail() + request.getPassword());
 		try {
 			// esta es la funcion que va a intentar identificarse, dado el username y la password introducida
 			Authentication authentication = authenticationManager.authenticate(
