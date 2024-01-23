@@ -1,11 +1,11 @@
 package com.example.Reto2.service;
 
 import com.example.Reto2.model.User;
-import java.util.Optional;
+import com.example.Reto2.model.UserServiceModel;
 
 public interface UserService {
 	User create(User user);
 	Iterable<User> findAll();
-	Optional<User> findBy(Integer id);
+	UserServiceModel findBy(Integer id);
 	User update(User user);
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.example.Reto2.model.Role;
 import com.example.Reto2.model.RoleEnum;
 import com.example.Reto2.model.User;
+import com.example.Reto2.model.UserServiceModel;
 import com.example.Reto2.repository.RoleRepository;
 import com.example.Reto2.repository.UserRepository;
 
@@ -46,9 +48,14 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 	public Iterable<User> findAll() {
 		return userRepository.findAll();
 	}
+
 	@Override
-	public Optional<User> findBy(Integer id) {
-		return userRepository.findById(id);
+	public UserServiceModel findBy(Integer id) {
+		User response = userRepository.findById(id)
+				.orElseThrow(() -> new UsernameNotFoundException(HttpStatus.NO_CONTENT + "not found"));
+		UserServiceModel userServiceModel = new UserServiceModel(response.getId(), response.getEmail(),
+				response.getRoles());
+		return userServiceModel;
 	}
 
 	public User update(User user) {

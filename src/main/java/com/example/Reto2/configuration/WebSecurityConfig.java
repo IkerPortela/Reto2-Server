@@ -67,10 +67,10 @@ public class WebSecurityConfig {
 				.requestMatchers(HttpMethod.PUT, "/api/auth/users", "/api/chats/{id}").authenticated()
 				.requestMatchers(HttpMethod.POST, "/api/chats").permitAll()
 				.requestMatchers(HttpMethod.PUT, "/api/chats/{id}").permitAll()
-				.requestMatchers(HttpMethod.GET,"/api/auth/me", "/api/auth/myInfo").authenticated()
+				.requestMatchers(HttpMethod.GET,"/api/auth/me", "/api/auth/myInfo","/api/sockets/leave-room/{room}/{idUser}","/api/sockets/join-room/{room}/{idUser}","/api/sockets/send-message").authenticated()
 				
-				.anyRequest().authenticated()
-				// .anyRequest().permitAll()
+				//.anyRequest().authenticated()
+				.anyRequest().permitAll()
 			)
 			// el siguiente bloque de codigo ajusta los codigos de error, para devolver 401 en caso de que tenga que estar autenticado
 			.exceptionHandling((exceptionHandling) ->

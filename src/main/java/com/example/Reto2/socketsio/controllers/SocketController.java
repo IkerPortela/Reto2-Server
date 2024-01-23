@@ -15,6 +15,7 @@ import com.example.Reto2.socketsio.config.SocketIOConfig;
 import com.example.Reto2.socketsio.model.MessageFromServer;
 import com.example.Reto2.socketsio.model.MessageType;
 
+
 @RestController
 @RequestMapping("/api/sockets")
 public class SocketController {

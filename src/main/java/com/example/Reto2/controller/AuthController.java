@@ -22,6 +22,7 @@ import com.example.Reto2.model.AuthRequest;
 import com.example.Reto2.model.AuthResponse;
 import com.example.Reto2.model.UpdateResponse;
 import com.example.Reto2.model.User;
+import com.example.Reto2.model.UserServiceModel;
 import com.example.Reto2.service.UserService;
 
 import jakarta.validation.Valid;
@@ -126,7 +127,7 @@ public class AuthController {
 		// aqui podemos castearlo a UserDetails o User. El UserDetails es una interfaz, 
 		// si lo casteamos a la interfaz no podremos sacar campos como la ID del usuario
 		User userDetails = (User) authentication.getPrincipal();
-		Optional<User> response = userService.findBy(userDetails.getId());
+		UserServiceModel response = userService.findBy(userDetails.getId());
 		// IMPORTANTE: por lo tanto, la ID del usuario no tiene que ir como parametro en la peticion del usuario
 		
 		// aqui podriamos devolver datos del usuario. quizá no sea lo que queremos devolver o no lo querramos devolver

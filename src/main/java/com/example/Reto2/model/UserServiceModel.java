@@ -21,6 +21,13 @@ public class UserServiceModel {
 		this.password = password;
 		this.roles = roles;
 	}
+	public UserServiceModel(Integer id, String email, List<Role> roles) {
+		super();
+		this.id = id;
+		this.email = email;
+		
+		this.roles = roles;
+	}
 
 	public Integer getId() {
 		return id;
