@@ -1,7 +1,5 @@
 package com.example.Reto2.socketsio.config;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,9 +11,7 @@ import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.example.Reto2.configuration.JwtTokenUtil;
-import com.example.Reto2.model.User;
 import com.example.Reto2.model.UserServiceModel;
-import com.example.Reto2.repository.UserRepository;
 import com.example.Reto2.service.UserService;
 import com.example.Reto2.socketsio.model.MessageFromClient;
 import com.example.Reto2.socketsio.model.MessageFromServer;
@@ -32,9 +28,11 @@ public class SocketIOConfig {
 	@Value("${socket-server.port}")
 	private Integer port;
 	@Autowired
-	private static UserService userService;
+	private UserService userService;
 
-
+	@Autowired
+	private JwtTokenUtil jwtUtil ;
+	
 	private SocketIOServer server;
 
 	public final static String CLIENT_USER_NAME_PARAM = "authorname";
@@ -62,7 +60,7 @@ public class SocketIOConfig {
 		return server;
 	}
 
-	private static class MyConnectListener implements ConnectListener {
+	private class MyConnectListener implements ConnectListener {
 
 		private SocketIOServer server;
 
@@ -90,18 +88,19 @@ public class SocketIOConfig {
 			}
 		}
 
-		private static void loadClientData(HttpHeaders headers, SocketIOClient client) {
+		private void loadClientData(HttpHeaders headers, SocketIOClient client) {
 
 			try {
 				String authorization = headers.get(AUTHORIZATION_HEADER);
-				String jwt = authorization.split(" ")[1].trim();
-
+				String jwt = authorization.split(" ")[1];
+				System.out.println(jwt);
 				// TODO HAY QUE VALIDAR Y CARGAR ESTOS DATOS DEL JWT! y si no no dejar
 				// conectarle o desconectarle
 				// si esta autenticado y puede, meterle en sus salas correspondientes...
 				// Esto está hardcodeado
 				// vamos a meter el userId y el userName en el socket, para futuras operaciones.
-				JwtTokenUtil jwtUtil = new JwtTokenUtil();
+				
+				System.out.println(jwtUtil.validateAccessToken(jwt));
 				if (!jwtUtil.validateAccessToken(jwt)) {
 					System.out.println("Token no validado");
 				} else {
@@ -124,7 +123,7 @@ public class SocketIOConfig {
 		}
 	}
 
-	private static class MyDisconnectListener implements DisconnectListener {
+	private class MyDisconnectListener implements DisconnectListener {
 		@Override
 		public void onDisconnect(SocketIOClient client) {
 			client.getNamespace().getAllClients().stream().forEach(data -> {
