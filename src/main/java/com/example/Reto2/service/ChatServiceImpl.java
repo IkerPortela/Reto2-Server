@@ -174,5 +174,48 @@ public class ChatServiceImpl implements ChatService{
 		
 		return response;
 	}
-
+	@Override
+	public ChatServiceModel joinToChat(Integer chatId, Integer userId) {
+		
+		
+		Chat chat =  chatRepository.findById(chatId).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado")
+				);
+		
+		User user = userRepository.findById(userId).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.CONFLICT, "Usuario no encontrado")
+				);
+	
+		chat.getUsers().add(user);
+		chatRepository.save(chat);
+		ChatServiceModel response = new ChatServiceModel(
+				chat.getId(),
+				chat.getName(),
+				chat.isPrivate(),
+				chat.getCreatedAt(),
+				chat.getUpdatedAt(),
+				chat.getUsers(),
+	    		chat.getMessages()
+				);
+		
+		return response;
+	}
+	@Override
+	public ChatServiceModel leaveChat(Integer chatId, Integer userId) {
+		
+		Chat chat =  chatRepository.findById(chatId).orElseThrow(
+				() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado")
+				);
+		
+		List<User> updatedList = new ArrayList<>();
+		List<User> chatWithUsers = chat.getUsers();
+		for(User chatUser : chatWithUsers) {
+			if(chatUser.getId() != userId) {
+				updatedList.add(chatUser);
+			}
+		}
+		chat.setUsers(updatedList);
+		chatRepository.save(chat);
+		return null;
+	}
 }

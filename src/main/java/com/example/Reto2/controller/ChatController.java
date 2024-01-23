@@ -78,6 +78,14 @@ public class ChatController {
         ChatServiceModel result = chatService.assignToChat(teacherId, chatId, userId);
         return new ResponseEntity<ChatServiceModel>(result, HttpStatus.OK);
     }
+    
+    @PostMapping("/chats/join")
+    public ResponseEntity<ChatServiceModel> joinUserToChat(
+            @RequestParam Integer chatId,
+            @RequestParam Integer userId) {
+        ChatServiceModel result = chatService.joinToChat(chatId, userId);
+        return new ResponseEntity<ChatServiceModel>(result, HttpStatus.OK);
+    }
 	
 	@PutMapping("/chats/{id}")
 	public ResponseEntity<ChatServiceModel> updateChat(@PathVariable("id") Integer id, @RequestBody ChatPostRequest request){
@@ -89,6 +97,14 @@ public class ChatController {
 	@DeleteMapping("/chats/{id}")
 	public ResponseEntity<?> deleteChat(@PathVariable("id") Integer id){
 		chatService.deleteChatById(id);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/chats/leave")
+	public ResponseEntity<?> userLeaveChat(
+			@RequestParam Integer chatId,
+            @RequestParam Integer userId){
+		chatService.leaveChat(chatId, userId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

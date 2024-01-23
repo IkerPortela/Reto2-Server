@@ -14,4 +14,7 @@ public interface ChatService {
 	ChatServiceModel updateChat(Integer id, ChatServiceModel request);
 	void deleteChatById(Integer id);
 	ChatServiceModel assignToChat(Integer teacherId, Integer chatId, Integer userId);
+	ChatServiceModel joinToChat(Integer chatId, Integer userId);
+	ChatServiceModel leaveChat(Integer chatId, Integer userId);
+
 }
