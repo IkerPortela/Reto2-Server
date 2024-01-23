@@ -108,4 +108,8 @@ public class ChatController {
 		chatService.leaveChat(chatId, authentication);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+	
+	 
+	
+	
 }
