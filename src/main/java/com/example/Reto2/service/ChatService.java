@@ -2,7 +2,8 @@ package com.example.Reto2.service;
 
 import java.util.List;
 
-import com.example.Reto2.model.Chat;
+import org.springframework.security.core.Authentication;
+
 import com.example.Reto2.model.ChatServiceModel;
 
 public interface ChatService {
@@ -15,6 +16,6 @@ public interface ChatService {
 	void deleteChatById(Integer id);
 	ChatServiceModel assignToChat(Integer teacherId, Integer chatId, Integer userId);
 	ChatServiceModel joinToChat(Integer chatId, Integer userId);
-	ChatServiceModel leaveChat(Integer chatId, Integer userId);
+	ChatServiceModel leaveChat(Integer chatId, Authentication authentication);
 
 }

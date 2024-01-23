@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,9 +26,11 @@ public class ChatServiceImpl implements ChatService{
 	ChatRepository chatRepository;
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	UserService userService;
+	
 	@Override
 	public List<ChatServiceModel> getAllChatsByUserId(Integer userId) {
-	    // Obtener el usuario por su ID
 	    Optional<User> userOptional = userRepository.findById(userId);
 	        User user = userOptional.get();
 	        
@@ -201,19 +204,24 @@ public class ChatServiceImpl implements ChatService{
 		return response;
 	}
 	@Override
-	public ChatServiceModel leaveChat(Integer chatId, Integer userId) {
+	public ChatServiceModel leaveChat(Integer chatId, Authentication authentication) {
 		
 		Chat chat =  chatRepository.findById(chatId).orElseThrow(
 				() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado")
 				);
 		
+		User user = (User) authentication.getPrincipal();
+		Optional<User> response = userService.findBy(user.getId());
+		
 		List<User> updatedList = new ArrayList<>();
 		List<User> chatWithUsers = chat.getUsers();
-		for(User chatUser : chatWithUsers) {
-			if(chatUser.getId() != userId) {
-				updatedList.add(chatUser);
-			}
-		}
+	    response.ifPresent(responseUser -> {
+	        for (User chatUser : chatWithUsers) {
+	            if (!chatUser.getId().equals(responseUser.getId())) {
+	                updatedList.add(chatUser);
+	            }
+	        }
+	    });
 		chat.setUsers(updatedList);
 		chatRepository.save(chat);
 		return null;
