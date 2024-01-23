@@ -73,18 +73,18 @@ public class ChatController {
 	}
     @PostMapping("/chats/assign")
     public ResponseEntity<ChatServiceModel> assignUserToChat(
-            @RequestParam Integer teacherId,
+    		Authentication authentication,
             @RequestParam Integer chatId,
             @RequestParam Integer userId) {
-        ChatServiceModel result = chatService.assignToChat(teacherId, chatId, userId);
+        ChatServiceModel result = chatService.assignToChat(authentication, chatId, userId);
         return new ResponseEntity<ChatServiceModel>(result, HttpStatus.OK);
     }
     
     @PostMapping("/chats/join")
     public ResponseEntity<ChatServiceModel> joinUserToChat(
             @RequestParam Integer chatId,
-            @RequestParam Integer userId) {
-        ChatServiceModel result = chatService.joinToChat(chatId, userId);
+            Authentication authentication) {
+        ChatServiceModel result = chatService.joinChat(chatId, authentication);
         return new ResponseEntity<ChatServiceModel>(result, HttpStatus.OK);
     }
 	
@@ -104,7 +104,7 @@ public class ChatController {
 	@DeleteMapping("/chats/leave")
 	public ResponseEntity<?> userLeaveChat(
 			@RequestParam Integer chatId,
-            @RequestParam Authentication authentication){
+            Authentication authentication){
 		chatService.leaveChat(chatId, authentication);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
