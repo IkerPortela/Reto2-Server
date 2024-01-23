@@ -1,7 +1,5 @@
 package com.example.Reto2.model;
 
-import java.util.List;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +10,7 @@ public class ChatPostRequest {
 	@NotEmpty(message = "El nombre no puede ser vacio")
 	@NotBlank(message = "El nombre no puede ser blanco")
 	private String name;
-	private boolean is_private;
+	private boolean isPrivate;
 
 	// private List<User> users;
 	// private List<Message> messages;
@@ -25,7 +23,7 @@ public class ChatPostRequest {
 			boolean isPrivate) {
 		super();
 		this.name = name;
-		this.is_private = isPrivate;
+		this.isPrivate = isPrivate;
 	}
 
 	public String getName() {
@@ -37,15 +35,15 @@ public class ChatPostRequest {
 	}
 
 	public boolean isPrivate() {
-		return is_private;
+		return isPrivate;
 	}
 
 	public void setPrivate(boolean isPrivate) {
-		this.is_private = isPrivate;
+		this.isPrivate = isPrivate;
 	}
 
 	@Override
 	public String toString() {
-		return "GroupPostRequest [name=" + name + ", isPrivate=" + is_private + "]";
+		return "GroupPostRequest [name=" + name + ", isPrivate=" + isPrivate + "]";
 	}
 }

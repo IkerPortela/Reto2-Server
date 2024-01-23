@@ -30,7 +30,7 @@ public class Chat {
 	@Column()
 	private String name;
 	@Column()
-	private boolean is_private;
+	private boolean isPrivate;
 	@Column()
 	private String createdAt;
 	@Column()
@@ -56,7 +56,7 @@ public class Chat {
 	public Chat(String name, boolean isPrivate) {
 		super();
 		this.name = name;
-		this.is_private = isPrivate;
+		this.isPrivate = isPrivate;
 	}
 
 
@@ -66,7 +66,7 @@ public class Chat {
 		super();
 		this.id = id;
 		this.name = name;
-		this.is_private = isPrivate;
+		this.isPrivate = isPrivate;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.users = users;
@@ -90,11 +90,11 @@ public class Chat {
 	}
 
 	public boolean isPrivate() {
-		return is_private;
+		return isPrivate;
 	}
 
 	public void setPrivate(boolean isPrivate) {
-		this.is_private = isPrivate;
+		this.isPrivate = isPrivate;
 	}
 
 	public String getCreatedAt() {
@@ -131,7 +131,7 @@ public class Chat {
 
 	@Override
 	public String toString() {
-		return "Group [id=" + id + ", name=" + name + ", isPrivate=" + is_private + ", createdAt=" 
+		return "Group [id=" + id + ", name=" + name + ", isPrivate=" + isPrivate + ", createdAt=" 
 	+ createdAt + ", updatedAt=" + updatedAt + ", users=" + users + ", messages=" + messages
 				+ "]";
 	}
