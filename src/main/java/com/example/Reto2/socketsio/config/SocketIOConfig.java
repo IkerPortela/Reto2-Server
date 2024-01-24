@@ -44,14 +44,11 @@ public class SocketIOConfig {
 		com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
 		config.setHostname(host);
 		config.setPort(port);
-
 		// vamos a permitir a una web que no este en el mismo host y port conectarse. Si
 		// no da error de Cross Domain
 		config.setAllowHeaders("Authorization");
 		config.setOrigin("http://localhost:8080");
-
 		server = new SocketIOServer(config);
-
 		server.addConnectListener(new MyConnectListener(server));
 		server.addDisconnectListener(new MyDisconnectListener());
 		server.addEventListener(SocketEvents.ON_MESSAGE_RECEIVED.value, MessageFromClient.class, onSendMessage());
@@ -93,14 +90,11 @@ public class SocketIOConfig {
 			try {
 				String authorization = headers.get(AUTHORIZATION_HEADER);
 				String jwt = authorization.split(" ")[1];
-				System.out.println(jwt);
 				// TODO HAY QUE VALIDAR Y CARGAR ESTOS DATOS DEL JWT! y si no no dejar
 				// conectarle o desconectarle
 				// si esta autenticado y puede, meterle en sus salas correspondientes...
 				// Esto está hardcodeado
 				// vamos a meter el userId y el userName en el socket, para futuras operaciones.
-				
-				System.out.println(jwtUtil.validateAccessToken(jwt));
 				if (!jwtUtil.validateAccessToken(jwt)) {
 					System.out.println("Token no validado");
 				} else {
