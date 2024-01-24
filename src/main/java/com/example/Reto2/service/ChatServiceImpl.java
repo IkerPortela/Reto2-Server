@@ -136,7 +136,6 @@ public class ChatServiceImpl implements ChatService {
 		User userDetails = (User) authentication.getPrincipal();
 		UserServiceModel teacher = userService.findBy(userDetails.getId());
 
-
 		Chat chat = chatRepository.findById(chatId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
 
@@ -158,39 +157,6 @@ public class ChatServiceImpl implements ChatService {
 		return response;
 	}
 
-
-		
-		Chat chat =  chatRepository.findById(chatId).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado")
-				);
-		
-		User user = userRepository.findById(userId).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.CONFLICT, "Usuario no encontrado")
-				);
-		
-			List<Role> teacherRoles = teacher.getRoles();
-			
-			for(Role role : teacherRoles) {
-				if (role.getName().equals("Profesor")) {
-					chat.getUsers().add(user);
-					chatRepository.save(chat);
-				}// TODO Manejar el caso de que no tenga un rol de profesor 
-				
-			}
-
-			
-		ChatServiceModel response = new ChatServiceModel(
-				chat.getId(),
-				chat.getName(),
-				chat.isPrivate(),
-				chat.getCreatedAt(),
-				chat.getUpdatedAt(),
-				chat.getUsers(),
-	    		chat.getMessages()
-				);
-	return response;
-	
-		
 	public ChatServiceModel assignToChat(Integer teacherId, Integer chatId, Integer userId) {
 
 		User teacher = userRepository.findById(teacherId)
@@ -231,14 +197,6 @@ public class ChatServiceImpl implements ChatService {
 		return null;
 	}
 
-		User addUser = new User(
-				user.getId(),
-				user.getEmail(),
-				user.getPassword());
-	
-	    	chat.getUsers().add(addUser);
-	    	return null;
-	}
 	public ChatServiceModel joinToChat(Integer chatId, Integer userId) {
 
 		Chat chat = chatRepository.findById(chatId)
@@ -258,7 +216,6 @@ public class ChatServiceImpl implements ChatService {
 	@Override
 	public ChatServiceModel leaveChat(Integer chatId, Authentication authentication) {
 
-
 		Chat chat = chatRepository.findById(chatId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
 
@@ -272,22 +229,6 @@ public class ChatServiceImpl implements ChatService {
 				updatedList.add(chatUser);
 			}
 		}
-
-		
-		Chat chat =  chatRepository.findById(chatId).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado")
-				);
-		
-		User userDetails = (User) authentication.getPrincipal();
-		UserServiceModel user = userService.findBy(userDetails.getId());
-		
-		List<User> updatedList = new ArrayList<>();
-		List<User> chatWithUsers = chat.getUsers();
-	        for (User chatUser : chatWithUsers) {
-	            if (!chatUser.getId().equals(user.getId())) {
-	                updatedList.add(chatUser);
-	            }
-	        }
 
 		chat.setUsers(updatedList);
 		chatRepository.save(chat);
