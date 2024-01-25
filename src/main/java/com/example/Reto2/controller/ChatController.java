@@ -37,7 +37,6 @@ public class ChatController {
 
 		for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(userId)) {
 
-
 			response.add(chatModelService);
 		}
 

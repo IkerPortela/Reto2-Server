@@ -20,14 +20,13 @@ public class Message {
 	private String imagePath;
 	@Column()
 	private boolean isSend;
-
 	@Column()
 	private Integer userId;
 	
-	
 	@Column()
 	private Integer chatId;
-
+	
+	
 	
 	public Message() {}
 

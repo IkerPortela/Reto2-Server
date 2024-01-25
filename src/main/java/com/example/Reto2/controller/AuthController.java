@@ -135,7 +135,6 @@ public class AuthController {
 		// necesario en algunos servicios: si quiero devolver una lista o elemento privado del usuario, no voy a querer
 		// que el usuario mande su ID por parametro. Ya que es trampeable.
 		// de ahi que sea "/me" en el ejemplo 
-		
 		return ResponseEntity.ok().body(response);
 	}
 	

@@ -15,6 +15,7 @@ public class ChatServiceModel {
 
 	// @JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<Message> messages;
+	private Message message;
 
 	public ChatServiceModel() {
 	}
@@ -30,12 +31,30 @@ public class ChatServiceModel {
 		this.users = users;
 		this.messages = messages;
 	}
+	
+
+	public ChatServiceModel(Integer id, String name, boolean isPrivate, Message message) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.isPrivate = isPrivate;
+		this.message = message;
+	}
 
 	public ChatServiceModel(String name, boolean isPrivate) {
 		super();
 
 		this.name = name;
 		this.isPrivate = isPrivate;
+	}
+	
+
+	public Message getMessage() {
+		return message;
+	}
+
+	public void setMessage(Message message) {
+		this.message = message;
 	}
 
 	public Integer getId() {

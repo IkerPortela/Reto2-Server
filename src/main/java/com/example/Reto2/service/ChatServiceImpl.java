@@ -12,6 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.Reto2.model.Chat;
 import com.example.Reto2.model.ChatServiceModel;
+import com.example.Reto2.model.Message;
+import com.example.Reto2.model.MessageServiceModel;
 import com.example.Reto2.model.Role;
 import com.example.Reto2.model.User;
 import com.example.Reto2.model.UserServiceModel;
@@ -30,24 +32,39 @@ public class ChatServiceImpl implements ChatService {
 
 	@Override
 	public List<ChatServiceModel> getAllChatsByUserId(Integer userId) {
+		
+		List<ChatServiceModel> ret = null;
+
 		Optional<User> userOptional = userRepository.findById(userId);
 		User user = userOptional.get();
-		
-		List<Chat> chats = user.getChats();
 
-		List<ChatServiceModel> response = new ArrayList<>();
-
-		for (Chat chat : chats) {
+		for (Chat chat : user.getChats()) {
+			
+			ret = null == ret? new ArrayList<ChatServiceModel> () : ret;
+			
 			ChatServiceModel chatServiceModel = new ChatServiceModel();
 			chatServiceModel.setId(chat.getId());
 			chatServiceModel.setName(chat.getName());
 			chatServiceModel.setPrivate(chat.isPrivate());
-			chatServiceModel.setUsers(chat.getUsers());
-			chatServiceModel.setMessages(chat.getMessages());
-			response.add(chatServiceModel);
+			chatServiceModel.setMessage(mensajeReciente(chat.getMessages()));
+			
+			ret.add(chatServiceModel);
 		}
 
-		return response;
+		return ret;
+	}
+
+	private Message mensajeReciente(List<Message> messages) {
+		Message ret = null;
+		if (!messages.isEmpty()) {
+			ret = messages.get(messages.size() - 1);
+			for (Message message : messages) {
+				System.out.println(message.toString());
+			}
+		} else {
+			System.out.println("La lista de mensajes ses nula o vacía");
+		}
+		return ret;
 	}
 
 	@Override
