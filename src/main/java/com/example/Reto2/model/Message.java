@@ -1,17 +1,10 @@
 package com.example.Reto2.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -27,44 +20,34 @@ public class Message {
 	private String imagePath;
 	@Column()
 	private boolean isSend;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", foreignKey=@ForeignKey(name = "Fk_user_id"))
-	@JsonManagedReference
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-	private User user;
-	
-	@Column(name="user_id", insertable=false, updatable=false)
+	@Column()
 	private Integer userId;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "chat_id", foreignKey=@ForeignKey(name = "Fk_chat_id"))
-	@JsonManagedReference
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-	private Chat chat;
-	
-	@Column(name = "chat_id", insertable=false, updatable=false)
-	private Integer chatId;
 	@Column()
-	private String createdAt;
-	@Column
-	private String updatedAt;
+	private Integer chatId;
+	
+	
 	
 	public Message() {}
 
-	public Message(Integer id, String text, String imagePath, boolean isSend,
-			User user, Integer userId, Chat chat, Integer chatId, String createdAt, String updatedAt) {
+	public Message(Integer id, String text, String imagePath, boolean isSend, Integer userId, Integer chatId) {
 		super();
 		this.id = id;
 		this.text = text;
 		this.imagePath = imagePath;
 		this.isSend = isSend;
-		this.user = user;
 		this.userId = userId;
-		this.chat = chat;
 		this.chatId = chatId;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
+	
+	}
+	
+
+	public Message(String text, boolean isSend, Integer userId, Integer chatId) {
+		super();
+		this.text = text;
+		this.isSend = isSend;
+		this.userId = userId;
+		this.chatId = chatId;
 	}
 
 	public Integer getId() {
@@ -99,13 +82,7 @@ public class Message {
 		this.isSend = isSend;
 	}
 
-	public User getUser() {
-		return user;
-	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
 
 	public Integer getUserId() {
 		return userId;
@@ -115,13 +92,7 @@ public class Message {
 		this.userId = userId;
 	}
 
-	public Chat getChat() {
-		return chat;
-	}
 
-	public void setChat(Chat chat) {
-		this.chat = chat;
-	}
 
 	public Integer getChatId() {
 		return chatId;
@@ -131,26 +102,12 @@ public class Message {
 		this.chatId = chatId;
 	}
 
-	public String getCreatedAt() {
-		return createdAt;
-	}
 
-	public void setCreatedAt(String createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public String getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(String updatedAt) {
-		this.updatedAt = updatedAt;
-	}
 
 	@Override
 	public String toString() {
-		return "Message [id=" + id + ", text=" + text + ", imagePath=" + imagePath  + ", isSend=" + isSend + ", user=" + user + ", userId=" + userId
-				+ ", chat=" + chat + ", chatId=" + chatId + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+		return "Message [id=" + id + ", text=" + text + ", imagePath=" + imagePath  + ", isSend=" + isSend + ", userId=" + userId+
+				" chatId =" + chatId 
 				+ "]";
 	}
 	

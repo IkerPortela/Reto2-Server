@@ -50,7 +50,7 @@ public class Chat {
     @JsonManagedReference
     private List<User> users;
     
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "chatId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     @JsonManagedReference
     private List<Message> messages;

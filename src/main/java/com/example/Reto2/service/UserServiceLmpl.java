@@ -53,8 +53,17 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 	public UserServiceModel findBy(Integer id) {
 		User response = userRepository.findById(id)
 				.orElseThrow(() -> new UsernameNotFoundException(HttpStatus.NO_CONTENT + "not found"));
-		UserServiceModel userServiceModel = new UserServiceModel(response.getId(), response.getEmail(),
+		UserServiceModel userServiceModel = new UserServiceModel(
+				response.getId(),
+				response.getEmail(),
+				response.getPassword(),
+				response.getName(),
+				response.getSurname(),
+				response.getAddress(),
+				response.getPhone(),
+				response.getDni(),
 				response.getRoles());
+		System.out.println(userServiceModel.toString());
 		return userServiceModel;
 	}
 

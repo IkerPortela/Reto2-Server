@@ -8,7 +8,7 @@ import com.example.Reto2.model.MessageServiceModel;
 public interface MessageService {
 
 	List<MessageServiceModel> getAllMessagesByChatId(Integer integer);
-	MessageServiceModel createMessage(Message message);
+	Message createMessage(Message message);
 	MessageServiceModel updateMessage(Message message);
 	void deleteMessageById(Integer id);
 }

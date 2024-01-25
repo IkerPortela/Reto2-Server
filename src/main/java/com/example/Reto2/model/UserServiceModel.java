@@ -9,6 +9,11 @@ public class UserServiceModel {
 	private Integer id;
 	private String email;
 	private String password;
+	private String name;
+	private String surname;
+	private String address;
+	private int phone;
+	private String dni;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<Role> roles;
@@ -31,7 +36,52 @@ public class UserServiceModel {
 		this.email = email;
 		this.roles = roles;
 	}
+	
+	
 
+	public UserServiceModel(Integer id, String email, String password, String name, String surname, String address,
+			int phone, String dni, List<Role> roles) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.surname = surname;
+		this.address = address;
+		this.phone = phone;
+		this.dni = dni;
+		this.roles = roles;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getSurname() {
+		return surname;
+	}
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public int getPhone() {
+		return phone;
+	}
+	public void setPhone(int phone) {
+		this.phone = phone;
+	}
+	public String getDni() {
+		return dni;
+	}
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
 	public Integer getId() {
 		return id;
 	}

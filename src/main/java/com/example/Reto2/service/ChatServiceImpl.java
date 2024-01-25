@@ -12,9 +12,11 @@ import org.springframework.web.server.ResponseStatusException;
 import com.example.Reto2.model.Chat;
 import com.example.Reto2.model.ChatPostRequest;
 import com.example.Reto2.model.ChatServiceModel;
+import com.example.Reto2.model.Message;
+import com.example.Reto2.model.MessageServiceModel;
+import com.example.Reto2.model.Role;
 import com.example.Reto2.model.User;
 import com.example.Reto2.model.UserServiceModel;
-import com.example.Reto2.model.Role;
 import com.example.Reto2.repository.ChatRepository;
 import com.example.Reto2.repository.UserRepository;
 
@@ -29,6 +31,7 @@ public class ChatServiceImpl implements ChatService {
 	UserService userService;
 
 	@Override
+<<<<<<< HEAD
 	public List<ChatServiceModel> getAllChatsByUserId(Authentication authentication) {
 
 		User userDetails = (User) authentication.getPrincipal();
@@ -40,19 +43,51 @@ public class ChatServiceImpl implements ChatService {
 		List<ChatServiceModel> response = new ArrayList<>();
 
 		for (Chat chat : chats) {
+=======
+	public List<ChatServiceModel> getAllChatsByUserId(Integer userId) {
+		
+		List<ChatServiceModel> ret = null;
+
+		Optional<User> userOptional = userRepository.findById(userId);
+		User user = userOptional.get();
+
+		for (Chat chat : user.getChats()) {
+			
+			ret = null == ret? new ArrayList<ChatServiceModel> () : ret;
+			
+>>>>>>> 3c6cb3d8e908fb0c56a48f4380f369cd20466385
 			ChatServiceModel chatServiceModel = new ChatServiceModel();
 			chatServiceModel.setId(chat.getId());
 			chatServiceModel.setName(chat.getName());
 			chatServiceModel.setPrivate(chat.isPrivate());
+<<<<<<< HEAD
 			chatServiceModel.setCreator(chat.getCreator());
 			chatServiceModel.setCreatorId(chat.getCreatorId());
 			chatServiceModel.setUsers(chat.getUsers());
 			chatServiceModel.setMessages(chat.getMessages());
 
 			response.add(chatServiceModel);
+=======
+			chatServiceModel.setMessage(mensajeReciente(chat.getMessages()));
+			
+			ret.add(chatServiceModel);
+>>>>>>> 3c6cb3d8e908fb0c56a48f4380f369cd20466385
 		}
 
-		return response;
+		return ret;
+	}
+
+	private Message mensajeReciente(List<Message> messages) {
+		Message ret = null;
+		if (!messages.isEmpty()) {
+			ret = messages.get(messages.size() - 1);
+			for (Message message : messages) {
+				System.out.println(message.toString());
+			}
+		} else {
+			System.out.println("La lista de mensajes ses nula o vacía");
+		}
+		return ret;
 	}
 
 	@Override
@@ -185,38 +220,19 @@ public class ChatServiceImpl implements ChatService {
 
 	@Override
 	public void deleteChatById(Integer id) {
-		Chat chat =  chatRepository.findById(id).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado")
-				);
-		
+		Chat chat = chatRepository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
+
 		chatRepository.deleteById(id);
 	}
 
 	@Override
 	public ChatServiceModel assignToChat(Authentication authentication, Integer chatId, Integer userId) {
-		
-		
+
 		User userDetails = (User) authentication.getPrincipal();
 		UserServiceModel teacher = userService.findBy(userDetails.getId());
-		
-		Chat chat =  chatRepository.findById(chatId).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado")
-				);
-		
-		User user = userRepository.findById(userId).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.CONFLICT, "Usuario no encontrado")
-				);
-		
-			List<Role> teacherRoles = teacher.getRoles();
-			
-			for(Role role : teacherRoles) {
-				if (role.getName().equals("Profesor")) {
-					chat.getUsers().add(user);
-					chatRepository.save(chat);
-				}// TODO Manejar el caso de que no tenga un rol de profesor 
-				
-			}
 
+<<<<<<< HEAD
 			
 			ChatServiceModel response = new ChatServiceModel(
 					chat.getId(), 
@@ -229,17 +245,64 @@ public class ChatServiceImpl implements ChatService {
 					);
 	return response;
 	}
+=======
+		Chat chat = chatRepository.findById(chatId)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
+
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Usuario no encontrado"));
+
+		List<Role> teacherRoles = teacher.getRoles();
+
+		for (Role role : teacherRoles) {
+			if (role.getName().equals("Profesor")) {
+				chat.getUsers().add(user);
+				chatRepository.save(chat);
+			} // TODO Manejar el caso de que no tenga un rol de profesor
+
+		}
+
+		ChatServiceModel response = new ChatServiceModel(chat.getId(), chat.getName(), chat.isPrivate(),
+				chat.getCreatedAt(), chat.getUpdatedAt(), chat.getUsers(), chat.getMessages());
+		return response;
+	}
+
+	public ChatServiceModel assignToChat(Integer teacherId, Integer chatId, Integer userId) {
+
+		User teacher = userRepository.findById(teacherId)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Usuario agregador no encontrado"));
+
+		Chat chat = chatRepository.findById(chatId)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
+
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Usuario no encontrado"));
+		List<Role> teacherRoles = teacher.getRoles();
+
+		for (Role role : teacherRoles) {
+			if (role.getName().equals("Profesor")) {
+				chat.getUsers().add(user);
+				chatRepository.save(chat);
+			}
+
+		}
+
+		ChatServiceModel response = new ChatServiceModel(chat.getId(), chat.getName(), chat.isPrivate(),
+				chat.getCreatedAt(), chat.getUpdatedAt(), chat.getUsers(), chat.getMessages());
+
+		return response;
+	}
+>>>>>>> 3c6cb3d8e908fb0c56a48f4380f369cd20466385
 
 	@Override
 	public ChatServiceModel joinChat(Integer chatId, Authentication authentication) {
-		
-		
-		Chat chat =  chatRepository.findById(chatId).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado")
-				);
-		
+
+		Chat chat = chatRepository.findById(chatId)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
+
 		User userDetails = (User) authentication.getPrincipal();
 		UserServiceModel user = userService.findBy(userDetails.getId());
+<<<<<<< HEAD
 		
 		User addUser = new User(
 				user.getId(),
@@ -248,7 +311,14 @@ public class ChatServiceImpl implements ChatService {
 	
 	    	chat.getUsers().add(addUser);
 	    	return null;
+=======
+		User addUser = new User(user.getId(), user.getEmail(), user.getPassword());
+
+		chat.getUsers().add(addUser);
+		return null;
+>>>>>>> 3c6cb3d8e908fb0c56a48f4380f369cd20466385
 	}
+
 	public ChatServiceModel joinToChat(Integer chatId, Integer userId) {
 
 		Chat chat = chatRepository.findById(chatId)
@@ -274,21 +344,21 @@ public class ChatServiceImpl implements ChatService {
 
 	@Override
 	public ChatServiceModel leaveChat(Integer chatId, Authentication authentication) {
-		
-		Chat chat =  chatRepository.findById(chatId).orElseThrow(
-				() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado")
-				);
-		
+
+		Chat chat = chatRepository.findById(chatId)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
+
 		User userDetails = (User) authentication.getPrincipal();
 		UserServiceModel user = userService.findBy(userDetails.getId());
-		
+
 		List<User> updatedList = new ArrayList<>();
 		List<User> chatWithUsers = chat.getUsers();
-	        for (User chatUser : chatWithUsers) {
-	            if (!chatUser.getId().equals(user.getId())) {
-	                updatedList.add(chatUser);
-	            }
-	        }
+		for (User chatUser : chatWithUsers) {
+			if (!chatUser.getId().equals(user.getId())) {
+				updatedList.add(chatUser);
+			}
+		}
+
 		chat.setUsers(updatedList);
 		chatRepository.save(chat);
 		return null;

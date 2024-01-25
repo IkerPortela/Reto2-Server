@@ -4,9 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.Reto2.model.ChatPostRequest;
+import com.example.Reto2.model.ChatServiceModel;
 import com.example.Reto2.model.Message;
 import com.example.Reto2.repository.MessageRepository;
 
@@ -21,4 +26,7 @@ public class MessageController {
 	public ResponseEntity<Iterable<Message>> getMessages() {
 		return new ResponseEntity<Iterable<Message>>(messageRepository.findAll(), HttpStatus.OK);
 	}
+	
+
+
 }
