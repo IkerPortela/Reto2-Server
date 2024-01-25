@@ -32,7 +32,7 @@ public class ChatServiceImpl implements ChatService {
 	public List<ChatServiceModel> getAllChatsByUserId(Integer userId) {
 		Optional<User> userOptional = userRepository.findById(userId);
 		User user = userOptional.get();
-
+		
 		List<Chat> chats = user.getChats();
 
 		List<ChatServiceModel> response = new ArrayList<>();
@@ -42,11 +42,8 @@ public class ChatServiceImpl implements ChatService {
 			chatServiceModel.setId(chat.getId());
 			chatServiceModel.setName(chat.getName());
 			chatServiceModel.setPrivate(chat.isPrivate());
-			chatServiceModel.setCreatedAt(chat.getCreatedAt());
-			chatServiceModel.setUpdatedAt(chat.getUpdatedAt());
 			chatServiceModel.setUsers(chat.getUsers());
 			chatServiceModel.setMessages(chat.getMessages());
-
 			response.add(chatServiceModel);
 		}
 

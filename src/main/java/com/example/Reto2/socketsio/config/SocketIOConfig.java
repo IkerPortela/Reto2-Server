@@ -1,5 +1,8 @@
 package com.example.Reto2.socketsio.config;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +14,14 @@ import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 import com.example.Reto2.configuration.JwtTokenUtil;
+import com.example.Reto2.model.Chat;
+import com.example.Reto2.model.ChatServiceModel;
+import com.example.Reto2.model.Message;
+import com.example.Reto2.model.User;
 import com.example.Reto2.model.UserServiceModel;
+import com.example.Reto2.repository.UserRepository;
+import com.example.Reto2.service.ChatService;
+import com.example.Reto2.service.MessageService;
 import com.example.Reto2.service.UserService;
 import com.example.Reto2.socketsio.model.MessageFromClient;
 import com.example.Reto2.socketsio.model.MessageFromServer;
@@ -29,17 +39,22 @@ public class SocketIOConfig {
 	private Integer port;
 	@Autowired
 	private UserService userService;
-
 	@Autowired
-	private JwtTokenUtil jwtUtil ;
-	
+	private UserRepository userRepository;
+	@Autowired
+	private ChatService chatService;
+	@Autowired
+	private MessageService messageService;
+	@Autowired
+	private JwtTokenUtil jwtUtil;
+
 	private SocketIOServer server;
 
 	public final static String CLIENT_USER_NAME_PARAM = "authorname";
 	public final static String CLIENT_USER_ID_PARAM = "authorid";
 	public final static String AUTHORIZATION_HEADER = "Authorization";
 
-	 @Bean
+	@Bean
 	public SocketIOServer socketIOServer() {
 		com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
 		config.setHostname(host);
@@ -101,14 +116,19 @@ public class SocketIOConfig {
 					System.out.println("Token validado");
 					Integer userId = jwtUtil.getUserId(jwt);
 					UserServiceModel userServiceModel = userService.findBy(userId);
-					String authorId = userServiceModel.getId().toString() ;
+					String authorId = userServiceModel.getId().toString();
 					String authorEmail = userServiceModel.getEmail().toString();
 					client.set(CLIENT_USER_ID_PARAM, authorId);
 					client.set(CLIENT_USER_NAME_PARAM, authorEmail);
 					// TODO ejemplo de salas
 					// ojo por que "Room1" no es la misma sala que "room1"
-					client.joinRoom("default-room");
-					client.joinRoom("Room1");
+
+					List<ChatServiceModel> chatResponse = chatService.getAllChatsByUserId(userId);
+		
+					for (ChatServiceModel chat :chatResponse ) {
+						System.out.println(chat.getName());
+						client.joinRoom(chat.getId().toString());
+					}
 
 				}
 			} catch (Exception e) {
@@ -158,6 +178,15 @@ public class SocketIOConfig {
 
 				MessageFromServer message = new MessageFromServer(MessageType.CLIENT, data.getRoom(), data.getMessage(),
 						authorName, authorId);
+				String chatIdStr = message.getRoom();
+				try {
+					Integer chatId = Integer.parseInt(chatIdStr);
+					Message messageForService = new Message(message.getMessage(), true, message.getAuthorId(), chatId);
+					System.out.println(messageForService.toString());
+					messageService.createMessage(messageForService);
+				} catch (NumberFormatException e) {
+					System.out.println("Error al convertir el room en Integer");
+				}
 
 				// enviamos a la room correspondiente:
 				server.getRoomOperations(data.getRoom()).sendEvent(SocketEvents.ON_SEND_MESSAGE.value, message);

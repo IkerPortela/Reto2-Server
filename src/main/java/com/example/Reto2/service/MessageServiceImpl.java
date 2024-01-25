@@ -35,12 +35,9 @@ public class MessageServiceImpl implements MessageService{
 	        messageServiceModel.setText(message.getText());
 	        messageServiceModel.setImagePath(message.getImagePath());
 	        messageServiceModel.setSend(message.isSend());
-	        messageServiceModel.setUser(message.getUser());
 	        messageServiceModel.setUserId(message.getUserId());
-	        messageServiceModel.setChat(message.getChat());
 	        messageServiceModel.setChatId(message.getChatId());
-	        messageServiceModel.setCreatedAt(message.getCreatedAt());
-	        messageServiceModel.setUpdatedAt(message.getUpdatedAt());
+	   
 	        
 	        response.add(messageServiceModel);
 		}
@@ -50,20 +47,11 @@ public class MessageServiceImpl implements MessageService{
 	}
 
 	@Override
-	public MessageServiceModel createMessage(Message message) {
-	    return new MessageServiceModel(
-		        message.getId(),
-		        message.getText(),
-		        message.getImagePath(),
-		        message.isSend(),
-		        message.getUser(),
-		        message.getUserId(),
-		        message.getChat(),
-		        message.getChatId(),
-		        message.getCreatedAt(),
-		        message.getUpdatedAt()
-	    		);
+	public Message createMessage(Message message) {
+	
+	    return messageRepository.save(message);
 	}
+	
 
 	@Override
 	public MessageServiceModel updateMessage(Message message) {
@@ -72,12 +60,8 @@ public class MessageServiceImpl implements MessageService{
 		        message.getText(),
 		        message.getImagePath(),
 		        message.isSend(),
-		        message.getUser(),
 		        message.getUserId(),
-		        message.getChat(),
-		        message.getChatId(),
-		        message.getCreatedAt(),
-		        message.getUpdatedAt()
+		        message.getChatId()
 	    		);
 	}
 
