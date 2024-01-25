@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -31,12 +32,17 @@ public class Chat {
 	private String name;
 	@Column()
 	private boolean isPrivate;
-	@Column()
-	private String createdAt;
-	@Column()
-	private String updatedAt;
 	
-    @ManyToMany(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "creator_id", foreignKey=@ForeignKey(name = "Fk_user_id"))
+	@JsonManagedReference
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	private User creator;
+	
+	@Column(name="creator_id", insertable=false, updatable=false)
+	private Integer creatorId;
+	
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "chats_users",
             joinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_chat_id")),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_id")))
@@ -50,25 +56,21 @@ public class Chat {
     private List<Message> messages;
     
     public Chat() {}
-    
-    
-    
-	public Chat(String name, boolean isPrivate) {
+     
+	public Chat(String name, boolean isPrivate, User creator) {
 		super();
 		this.name = name;
 		this.isPrivate = isPrivate;
+		this.creator = creator;
 	}
 
-
-
-	public Chat(Integer id, String name, boolean isPrivate, String createdAt, String updatedAt,
-			List<User> users, List<Message> messages) {
+	public Chat(Integer id, String name, boolean isPrivate, User creator, Integer creatorId, List<User> users, List<Message> messages) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.isPrivate = isPrivate;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
+		this.creator = creator;
+		this.creatorId = creatorId;
 		this.users = users;
 		this.messages = messages;
 	}
@@ -97,20 +99,20 @@ public class Chat {
 		this.isPrivate = isPrivate;
 	}
 
-	public String getCreatedAt() {
-		return createdAt;
+	public User getCreator() {
+		return creator;
 	}
 
-	public void setCreatedAt(String createdAt) {
-		this.createdAt = createdAt;
+	public void setCreator(User creator) {
+		this.creator = creator;
 	}
 
-	public String getUpdatedAt() {
-		return updatedAt;
+	public Integer getCreatorId() {
+		return creatorId;
 	}
 
-	public void setUpdatedAt(String updatedAt) {
-		this.updatedAt = updatedAt;
+	public void setCreatorId(Integer creatorId) {
+		this.creatorId = creatorId;
 	}
 
 	public List<User> getUsers() {
@@ -131,9 +133,8 @@ public class Chat {
 
 	@Override
 	public String toString() {
-		return "Group [id=" + id + ", name=" + name + ", isPrivate=" + isPrivate + ", createdAt=" 
-	+ createdAt + ", updatedAt=" + updatedAt + ", users=" + users + ", messages=" + messages
-				+ "]";
+		return "Chat [id=" + id + ", name=" + name + ", isPrivate=" + isPrivate + ", creator=" + creator
+				+ ", creatorId=" + creatorId +  ", users="
+				+ users + ", messages=" + messages + "]";
 	}
-	
 }

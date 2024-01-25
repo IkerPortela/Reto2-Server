@@ -12,20 +12,23 @@ public class UserServiceModel {
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<Role> roles;
+	
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private List<Chat> chats;
 
 	public UserServiceModel() {}
-	public UserServiceModel(Integer id, String email, String password, List<Role> roles) {
+	public UserServiceModel(Integer id, String email, String password, List<Role> roles, List<Chat> chats) {
 		super();
 		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.roles = roles;
+		this.chats = chats;
 	}
 	public UserServiceModel(Integer id, String email, List<Role> roles) {
 		super();
 		this.id = id;
 		this.email = email;
-		
 		this.roles = roles;
 	}
 
@@ -60,10 +63,17 @@ public class UserServiceModel {
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
-
+	
+	public List<Chat> getChats() {
+		return chats;
+	}
+	
+	public void setChats(List<Chat> chats) {
+		this.chats = chats;
+	}
 	@Override
 	public String toString() {
-		return "UserServiceModel [id=" + id + ", email=" + email + ", password=" + password + ", roles=" + roles + "]";
+		return "UserServiceModel [id=" + id + ", email=" + email + ", password=" + password + ", roles=" + roles + ", chats=" + chats + "]";
 	}
 
 }

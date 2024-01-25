@@ -23,8 +23,11 @@ import com.example.Reto2.model.ChatPostRequest;
 import com.example.Reto2.model.ChatServiceModel;
 import com.example.Reto2.model.Message;
 import com.example.Reto2.model.MessageServiceModel;
+import com.example.Reto2.model.User;
+import com.example.Reto2.model.UserServiceModel;
 import com.example.Reto2.service.ChatService;
 import com.example.Reto2.service.MessageService;
+import com.example.Reto2.service.UserService;
 
 @RestController
 @RequestMapping("api")
@@ -34,12 +37,14 @@ public class ChatController {
 	private ChatService chatService;
 	@Autowired
 	private MessageService messageService;
+	@Autowired
+	private UserService userService;
 	
-	@GetMapping("/chats/{userId}")
-	public ResponseEntity<List<ChatServiceModel>> getChatsById(@PathVariable("userId") Integer userId) {
+	@GetMapping("/chats/userChats")
+	public ResponseEntity<List<ChatServiceModel>> getChatsById(Authentication authentication) {
 	    List<ChatServiceModel> response = new ArrayList<>();
 
-	    for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(userId)) {
+	    for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(authentication)) {
 	        List<MessageServiceModel> messages = messageService.getAllMessagesByChatId(chatModelService.getId());
 
 	        List<Message> convertedMessages = new ArrayList<>();
@@ -66,10 +71,12 @@ public class ChatController {
 	}
 	
 	@PostMapping("/chats")
-	public ResponseEntity<ChatServiceModel> createChat(@RequestBody ChatPostRequest request){
-		ChatServiceModel chat = new ChatServiceModel(request.getName(),request.isPrivate());
-		chatService.createChat(chat);
-		return new ResponseEntity<ChatServiceModel>(chat,HttpStatus.CREATED);
+	public ResponseEntity<ChatServiceModel> createChat(@RequestBody ChatPostRequest request, Authentication authentication){
+		User creatorDetails = (User) authentication.getPrincipal();
+		UserServiceModel creator = userService.findBy(creatorDetails.getId());
+		request.setCreatorId(creator.getId());
+		ChatServiceModel result = chatService.createChat(authentication, request);
+		return new ResponseEntity<ChatServiceModel>(result,HttpStatus.CREATED);
 	}
     @PostMapping("/chats/assign")
     public ResponseEntity<ChatServiceModel> assignUserToChat(
