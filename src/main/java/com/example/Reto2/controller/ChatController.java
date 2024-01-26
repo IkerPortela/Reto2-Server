@@ -41,8 +41,8 @@ public class ChatController {
 	@GetMapping("/chats/userChats")
 	public ResponseEntity<List<ChatServiceModel>> getChatsById(Authentication authentication) {
 	    List<ChatServiceModel> response = new ArrayList<>();
-
-	    for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(authentication)) {
+	    User userDetails = (User) authentication.getPrincipal();
+	    for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(userDetails.getId())) {
 	        List<MessageServiceModel> messages = messageService.getAllMessagesByChatId(chatModelService.getId());
 
 	        List<Message> convertedMessages = new ArrayList<>();
@@ -53,7 +53,10 @@ public class ChatController {
 	            message.setSend(messageServiceModel.isSend());
 	            message.setUserId(messageServiceModel.getUserId());
 	            message.setChatId(messageServiceModel.getChatId());
+<<<<<<< HEAD
 
+=======
+>>>>>>> 582fe332cbd41318c6b2338c45aeba28f293ea67
 	            convertedMessages.add(message);
 	        }
 
@@ -62,7 +65,12 @@ public class ChatController {
 	    }
 
 	    return new ResponseEntity<>(response, HttpStatus.OK);
+<<<<<<< HEAD
 	}
+=======
+	    }
+
+>>>>>>> 582fe332cbd41318c6b2338c45aeba28f293ea67
 
 	@PostMapping("/chats")
 	public ResponseEntity<ChatServiceModel> createChat(@RequestBody ChatPostRequest request, Authentication authentication){
@@ -71,7 +79,12 @@ public class ChatController {
 		request.setCreatorId(creator.getId());
 		ChatServiceModel result = chatService.createChat(authentication, request);
 		return new ResponseEntity<ChatServiceModel>(result,HttpStatus.CREATED);
+<<<<<<< HEAD
 	}
+=======
+		}
+	
+>>>>>>> 582fe332cbd41318c6b2338c45aeba28f293ea67
 
 	@PostMapping("/chats/assign")
 	public ResponseEntity<ChatServiceModel> assignUserToChat(Authentication authentication,

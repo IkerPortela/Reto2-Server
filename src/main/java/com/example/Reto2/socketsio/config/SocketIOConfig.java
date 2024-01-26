@@ -123,7 +123,7 @@ public class SocketIOConfig {
 					// TODO ejemplo de salas
 					// ojo por que "Room1" no es la misma sala que "room1"
 
-					List<ChatServiceModel> chatResponse = chatService.getAllChatsByUserId(userId);
+					List<ChatServiceModel> chatResponse = chatService.getUserChats(userId);
 		
 					for (ChatServiceModel chat :chatResponse ) {
 						System.out.println(chat.getName());

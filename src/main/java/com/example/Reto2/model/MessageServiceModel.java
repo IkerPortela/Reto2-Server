@@ -14,7 +14,7 @@ public class MessageServiceModel {
 	
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Integer chatId;
-	
+	private String createdAt; 
 
 	
 	public MessageServiceModel() {}

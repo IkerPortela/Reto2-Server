@@ -26,6 +26,8 @@ public class Message {
 	@Column()
 	private Integer chatId;
 	
+	@Column()
+	private String createdAt;
 	
 	
 	public Message() {}
