@@ -19,13 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Reto2.model.ChatPostRequest;
 import com.example.Reto2.model.ChatServiceModel;
-<<<<<<< HEAD
 import com.example.Reto2.model.Message;
 import com.example.Reto2.model.MessageServiceModel;
 import com.example.Reto2.model.User;
 import com.example.Reto2.model.UserServiceModel;
-=======
->>>>>>> 3c6cb3d8e908fb0c56a48f4380f369cd20466385
 import com.example.Reto2.service.ChatService;
 import com.example.Reto2.service.MessageService;
 import com.example.Reto2.service.UserService;
@@ -44,8 +41,8 @@ public class ChatController {
 	@GetMapping("/chats/userChats")
 	public ResponseEntity<List<ChatServiceModel>> getChatsById(Authentication authentication) {
 	    List<ChatServiceModel> response = new ArrayList<>();
-
-	    for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(authentication)) {
+	    User userDetails = (User) authentication.getPrincipal();
+	    for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(userDetails.getId())) {
 	        List<MessageServiceModel> messages = messageService.getAllMessagesByChatId(chatModelService.getId());
 
 	        List<Message> convertedMessages = new ArrayList<>();
@@ -54,13 +51,8 @@ public class ChatController {
 	            message.setText(messageServiceModel.getText());
 	            message.setImagePath(messageServiceModel.getImagePath());
 	            message.setSend(messageServiceModel.isSend());
-	            message.setUser(messageServiceModel.getUser());
 	            message.setUserId(messageServiceModel.getUserId());
-	            message.setChat(messageServiceModel.getChat());
 	            message.setChatId(messageServiceModel.getChatId());
-	            message.setCreatedAt(messageServiceModel.getCreatedAt());
-	            message.setUpdatedAt(messageServiceModel.getUpdatedAt());
-
 	            convertedMessages.add(message);
 	        }
 
@@ -71,17 +63,6 @@ public class ChatController {
 	    return new ResponseEntity<>(response, HttpStatus.OK);
 	    }
 
-	@GetMapping("/chats/{userId}")
-	public ResponseEntity<List<ChatServiceModel>> getChatsById(@PathVariable("userId") Integer userId) {
-		List<ChatServiceModel> response = new ArrayList<>();
-
-		for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(userId)) {
-
-			response.add(chatModelService);
-		}
-
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
 
 	@PostMapping("/chats")
 	public ResponseEntity<ChatServiceModel> createChat(@RequestBody ChatPostRequest request, Authentication authentication){
@@ -91,11 +72,7 @@ public class ChatController {
 		ChatServiceModel result = chatService.createChat(authentication, request);
 		return new ResponseEntity<ChatServiceModel>(result,HttpStatus.CREATED);
 		}
-	public ResponseEntity<ChatServiceModel> createChat(@RequestBody ChatPostRequest request) {
-		ChatServiceModel chat = new ChatServiceModel(request.getName(), request.isPrivate());
-		chatService.createChat(chat);
-		return new ResponseEntity<ChatServiceModel>(chat, HttpStatus.CREATED);
-	}
+	
 
 	@PostMapping("/chats/assign")
 	public ResponseEntity<ChatServiceModel> assignUserToChat(Authentication authentication,

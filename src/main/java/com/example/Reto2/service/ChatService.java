@@ -12,7 +12,6 @@ public interface ChatService {
 	List<ChatServiceModel> getAllChatsByUserId(Integer id);
 	List<ChatServiceModel> getUserChats(Integer id);
 
-	List<ChatServiceModel> getAllChatsByUserId(Authentication authentication);
 	List<ChatServiceModel> getAllPrivateChats();
 	List<ChatServiceModel> getAllPublicChats();
 	ChatServiceModel createChat(Authentication authentication, ChatPostRequest chatPostRequest);
