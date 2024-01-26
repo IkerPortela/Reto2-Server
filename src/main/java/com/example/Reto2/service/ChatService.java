@@ -9,6 +9,8 @@ import com.example.Reto2.model.ChatServiceModel;
 public interface ChatService {
 
 	List<ChatServiceModel> getAllChatsByUserId(Integer id);
+	List<ChatServiceModel> getUserChats(Integer id);
+
 	List<ChatServiceModel> getAllPrivateChats();
 	List<ChatServiceModel> getAllPublicChats();
 	ChatServiceModel createChat(ChatServiceModel chat);

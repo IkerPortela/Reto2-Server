@@ -2,6 +2,8 @@ package com.example.Reto2.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class ChatServiceModel {
 
 	private Integer id;
@@ -10,10 +12,10 @@ public class ChatServiceModel {
 	private String createdAt;
 	private String updatedAt;
 
-	// @JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<User> users;
 
-	// @JsonInclude(JsonInclude.Include.NON_NULL)
+	 @JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<Message> messages;
 	private Message message;
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -29,6 +30,29 @@ public class ChatServiceImpl implements ChatService {
 	UserRepository userRepository;
 	@Autowired
 	UserService userService;
+	
+	@Override
+	public List<ChatServiceModel> getUserChats(Integer userId) {
+		
+		List<ChatServiceModel> ret = null;
+
+		Optional<User> userOptional = userRepository.findById(userId);
+		User user = userOptional.get();
+
+		for (Chat chat : user.getChats()) {
+			
+			ret = null == ret? new ArrayList<ChatServiceModel> () : ret;
+			
+			ChatServiceModel chatServiceModel = new ChatServiceModel();
+			chatServiceModel.setId(chat.getId());
+			chatServiceModel.setName(chat.getName());
+			chatServiceModel.setPrivate(chat.isPrivate());
+			
+			ret.add(chatServiceModel);
+		}
+
+		return ret;
+	}
 
 	@Override
 	public List<ChatServiceModel> getAllChatsByUserId(Integer userId) {
@@ -56,14 +80,17 @@ public class ChatServiceImpl implements ChatService {
 
 	private Message mensajeReciente(List<Message> messages) {
 		Message ret = null;
+		
 		if (!messages.isEmpty()) {
 			ret = messages.get(messages.size() - 1);
+
 			for (Message message : messages) {
 				System.out.println(message.toString());
 			}
 		} else {
 			System.out.println("La lista de mensajes ses nula o vacía");
 		}
+		
 		return ret;
 	}
 
