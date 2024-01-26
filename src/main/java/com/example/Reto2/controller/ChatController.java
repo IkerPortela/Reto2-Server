@@ -19,13 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Reto2.model.ChatPostRequest;
 import com.example.Reto2.model.ChatServiceModel;
-<<<<<<< HEAD
 import com.example.Reto2.model.Message;
 import com.example.Reto2.model.MessageServiceModel;
 import com.example.Reto2.model.User;
 import com.example.Reto2.model.UserServiceModel;
-=======
->>>>>>> 3c6cb3d8e908fb0c56a48f4380f369cd20466385
 import com.example.Reto2.service.ChatService;
 import com.example.Reto2.service.MessageService;
 import com.example.Reto2.service.UserService;
@@ -38,7 +35,6 @@ public class ChatController {
 	private ChatService chatService;
 	@Autowired
 	private MessageService messageService;
-<<<<<<< HEAD
 	@Autowired
 	private UserService userService;
 	
@@ -55,12 +51,8 @@ public class ChatController {
 	            message.setText(messageServiceModel.getText());
 	            message.setImagePath(messageServiceModel.getImagePath());
 	            message.setSend(messageServiceModel.isSend());
-	            message.setUser(messageServiceModel.getUser());
 	            message.setUserId(messageServiceModel.getUserId());
-	            message.setChat(messageServiceModel.getChat());
 	            message.setChatId(messageServiceModel.getChatId());
-	            message.setCreatedAt(messageServiceModel.getCreatedAt());
-	            message.setUpdatedAt(messageServiceModel.getUpdatedAt());
 
 	            convertedMessages.add(message);
 	        }
@@ -70,34 +62,15 @@ public class ChatController {
 	    }
 
 	    return new ResponseEntity<>(response, HttpStatus.OK);
-=======
-
-	@GetMapping("/chats/{userId}")
-	public ResponseEntity<List<ChatServiceModel>> getChatsById(@PathVariable("userId") Integer userId) {
-		List<ChatServiceModel> response = new ArrayList<>();
-
-		for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(userId)) {
-
-			response.add(chatModelService);
-		}
-
-		return new ResponseEntity<>(response, HttpStatus.OK);
->>>>>>> 3c6cb3d8e908fb0c56a48f4380f369cd20466385
 	}
 
 	@PostMapping("/chats")
-<<<<<<< HEAD
 	public ResponseEntity<ChatServiceModel> createChat(@RequestBody ChatPostRequest request, Authentication authentication){
 		User creatorDetails = (User) authentication.getPrincipal();
 		UserServiceModel creator = userService.findBy(creatorDetails.getId());
 		request.setCreatorId(creator.getId());
 		ChatServiceModel result = chatService.createChat(authentication, request);
 		return new ResponseEntity<ChatServiceModel>(result,HttpStatus.CREATED);
-=======
-	public ResponseEntity<ChatServiceModel> createChat(@RequestBody ChatPostRequest request) {
-		ChatServiceModel chat = new ChatServiceModel(request.getName(), request.isPrivate());
-		chatService.createChat(chat);
-		return new ResponseEntity<ChatServiceModel>(chat, HttpStatus.CREATED);
 	}
 
 	@PostMapping("/chats/assign")
@@ -112,7 +85,6 @@ public class ChatController {
 			Authentication authentication) {
 		ChatServiceModel result = chatService.joinChat(chatId, authentication);
 		return new ResponseEntity<ChatServiceModel>(result, HttpStatus.OK);
->>>>>>> 3c6cb3d8e908fb0c56a48f4380f369cd20466385
 	}
 
 	@PutMapping("/chats/{id}")
