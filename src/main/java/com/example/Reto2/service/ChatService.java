@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.security.core.Authentication;
 
+import com.example.Reto2.model.ChatPostRequest;
 import com.example.Reto2.model.ChatServiceModel;
 
 public interface ChatService {
@@ -11,9 +12,10 @@ public interface ChatService {
 	List<ChatServiceModel> getAllChatsByUserId(Integer id);
 	List<ChatServiceModel> getUserChats(Integer id);
 
+	List<ChatServiceModel> getAllChatsByUserId(Authentication authentication);
 	List<ChatServiceModel> getAllPrivateChats();
 	List<ChatServiceModel> getAllPublicChats();
-	ChatServiceModel createChat(ChatServiceModel chat);
+	ChatServiceModel createChat(Authentication authentication, ChatPostRequest chatPostRequest);
 	ChatServiceModel updateChat(Integer id, ChatServiceModel request);
 	void deleteChatById(Integer id);
 	ChatServiceModel assignToChat(Authentication authentication, Integer chatId, Integer userId);
