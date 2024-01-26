@@ -9,14 +9,14 @@ import com.example.Reto2.model.ChatServiceModel;
 
 public interface ChatService {
 
-	List<ChatServiceModel> getAllChatsByUserId(Integer id);
+	List<ChatServiceModel> getAllChatsByUserId(Authentication authentication);
 	List<ChatServiceModel> getUserChats(Integer id);
 
 	List<ChatServiceModel> getAllPrivateChats();
 	List<ChatServiceModel> getAllPublicChats();
 	ChatServiceModel createChat(Authentication authentication, ChatPostRequest chatPostRequest);
 	ChatServiceModel updateChat(Integer id, ChatServiceModel request);
-	void deleteChatById(Integer id);
+	void deleteChatById(Integer chatId, Authentication authentication);
 	ChatServiceModel assignToChat(Authentication authentication, Integer chatId, Integer userId);
 	ChatServiceModel joinChat(Integer chatId, Authentication authentication);
 	ChatServiceModel leaveChat(Integer chatId, Authentication authentication);

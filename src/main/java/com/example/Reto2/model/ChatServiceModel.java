@@ -32,11 +32,6 @@ public class ChatServiceModel {
 		this.creatorId = creatorId;
 	}
 	
-<<<<<<< HEAD
-=======
-
->>>>>>> 582fe332cbd41318c6b2338c45aeba28f293ea67
-
 	public ChatServiceModel(Integer id, String name, boolean isPrivate, Message message) {
 		super();
 		this.id = id;
