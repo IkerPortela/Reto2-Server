@@ -10,11 +10,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.example.Reto2.model.Chat;
 import com.example.Reto2.model.Role;
 import com.example.Reto2.model.RoleEnum;
 import com.example.Reto2.model.User;
 import com.example.Reto2.model.UserServiceModel;
+import com.example.Reto2.repository.ChatRepository;
 import com.example.Reto2.repository.RoleRepository;
 import com.example.Reto2.repository.UserRepository;
 
@@ -23,16 +26,19 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 	@Autowired
 	UserRepository userRepository;
 	@Autowired
+	ChatRepository chatRepository;
+	@Autowired
 	RoleRepository roleRepository;
 
 	@Override
-	public User create(User user) {
+	public UserServiceModel create(User user) {
 		List<Role> roles = new ArrayList<Role>();
 		Role role = roleRepository.findByName(RoleEnum.PROFESOR.toString());
 		roles.add(role);
 		user.setRoles(roles);
-
-		return userRepository.save(user);
+		userRepository.save(user);
+		
+		return null;
 	}
 
 	@Override
@@ -68,6 +74,35 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 	}
 
 	public User update(User user) {
+		
 		return userRepository.save(user);
+	}
+
+	@Override
+	public List<UserServiceModel> getAllUsersByChatId(Integer chatId) {
+		
+	    Chat chat = chatRepository.findById(chatId)
+	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chat no encontrado"));
+	    
+	    List<User> chatUsers = chat.getUsers();
+	    
+	    List<UserServiceModel> response = new ArrayList<>();
+	    
+	    for(User user : chatUsers) {
+	    	UserServiceModel userServiceModel = new UserServiceModel();
+	    			userServiceModel.setId(user.getId());
+	    			userServiceModel.setEmail(user.getEmail());
+	    			userServiceModel.setPassword(user.getPassword());
+	    			userServiceModel.setName(user.getName());
+	    			userServiceModel.setSurname(user.getSurname());
+	    			userServiceModel.setAddress(user.getAddress());
+	    			userServiceModel.setPhone(user.getPhone());
+	    			userServiceModel.setDni(user.getDni());
+	    			userServiceModel.setRoles(user.getRoles());
+	    			
+	    			response.add(userServiceModel);
+
+	    }
+	    return response;
 	}
 }

@@ -64,7 +64,11 @@ public class ChatController {
 
 	}
 
-
+	@GetMapping("/chats/public")
+	public ResponseEntity<List<ChatServiceModel>> getPublicChats(){
+		List<ChatServiceModel> response = chatService.getAllPublicChats();
+		return new ResponseEntity<List<ChatServiceModel>>(response,HttpStatus.CREATED);
+	}
 	@PostMapping("/chats")
 	public ResponseEntity<ChatServiceModel> createChat(@RequestBody ChatPostRequest request, Authentication authentication){
 		User creatorDetails = (User) authentication.getPrincipal();
@@ -108,5 +112,14 @@ public class ChatController {
 		chatService.leaveChat(chatId, authentication);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+	
+	@DeleteMapping("/chats/disassign")
+	public ResponseEntity<?> disassignUserFromChat(Authentication authentication,
+			@RequestParam Integer chatId, @RequestParam Integer userId){
+			chatService.disassignFromChat(authentication, chatId, userId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	
 
 }
