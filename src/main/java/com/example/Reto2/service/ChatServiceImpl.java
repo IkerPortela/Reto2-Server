@@ -198,24 +198,33 @@ public class ChatServiceImpl implements ChatService {
 	@Override
 	public void deleteChatById(Integer chatId, Authentication authentication) {
 	    Chat chat = chatRepository.findById(chatId)
-	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
+	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chat no encontrado"));
 
 	    User userDetails = (User) authentication.getPrincipal();
 	    User user = userRepository.findById(userDetails.getId())
-	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Usuario no encontrado"));
+	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
-	    boolean isStudent = user.getRoles().stream()
-	            .anyMatch(role -> role.getName().equals("Estudiante"));
+	    List<Role> userRoles = user.getRoles();
 
-	    boolean isTeacher = user.getRoles().stream()
-	            .anyMatch(role -> role.getName().equals("Profesor"));
-
-	    if (isStudent && chat.getCreatorId() == user.getId() 
-	    		|| isTeacher && chat.isPrivate() == false 
-	    		|| isTeacher && chat.isPrivate() && chat.getCreatorId() == user.getId()) {
-	        chatRepository.deleteById(chatId);
+	    for (Role role : userRoles) {
+	        if (role.getName().equals("Estudiante") && chat.getCreatorId().equals(user.getId())) {
+	            if (!chat.isPrivate()) {
+	                chatRepository.deleteById(chatId);
+	                return;
+	            }
+	        } else if (role.getName().equals("Profesor")) {
+	            if (!chat.isPrivate() || (chat.isPrivate() && chat.getCreatorId().equals(user.getId()))) {
+	                chatRepository.deleteById(chatId);
+	                return;
+	            }
+	        }
 	    }
+
+	    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permisos para eliminar este chat");
 	}
+
+
+
 
 	@Override
 	public ChatServiceModel assignToChat(Authentication authentication, Integer chatId, Integer userId) {
@@ -235,7 +244,9 @@ public class ChatServiceImpl implements ChatService {
 			if (role.getName().equals("Profesor")) {
 				chat.getUsers().add(user);
 				chatRepository.save(chat);
-			} // TODO Manejar el caso de que no tenga un rol de profesor
+			} else {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permisos para asignar a un usuario en este chat");
+			}
 
 		}
 
@@ -293,10 +304,8 @@ public class ChatServiceImpl implements ChatService {
 					}
 				}	
 			} else if(role.getName().equals("Estudiante") && chat.isPrivate() == true){
-				//TODO Tratar aqui la excepcion de estudiante en grupo privado
-				for (User chatUser : chatWithUsers) {
-						updatedList.add(chatUser);
-				}	
+
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permisos para salirte de este chat");
 			}else if (role.getName().equals("Profesor")) {
 				for (User chatUser : chatWithUsers) {
 					if (!chatUser.getId().equals(user.getId())) {
