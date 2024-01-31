@@ -67,24 +67,24 @@ public class ChatController {
 	public ResponseEntity<List<ChatServiceModel>> getUserChatsByAuth(Authentication authentication) {
 		User userDetails = (User) authentication.getPrincipal();
 		List<ChatServiceModel> response = chatService.getUserChats(userDetails.getId());
-		for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(userDetails.getId())) {
-			List<MessageServiceModel> messages = messageService.getAllMessagesByChatId(chatModelService.getId());
-
-			List<Message> convertedMessages = new ArrayList<>();
-			for (MessageServiceModel messageServiceModel : messages) {
-				Message message = new Message();
-				message.setText(messageServiceModel.getText());
-				message.setImagePath(messageServiceModel.getImagePath());
-				message.setSend(messageServiceModel.isSend());
-				message.setUserId(messageServiceModel.getUserId());
-				message.setChatId(messageServiceModel.getChatId());
-
-				convertedMessages.add(message);
-			}
+//		for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(userDetails.getId())) {
+//			List<MessageServiceModel> messages = messageService.getAllMessagesByChatId(chatModelService.getId());
+//
+//			List<Message> convertedMessages = new ArrayList<>();
+//			for (MessageServiceModel messageServiceModel : messages) {
+//				Message message = new Message();
+//				message.setText(messageServiceModel.getText());
+//				message.setImagePath(messageServiceModel.getImagePath());
+//				message.setSend(messageServiceModel.isSend());
+//				message.setUserId(messageServiceModel.getUserId());
+//				message.setChatId(messageServiceModel.getChatId());
+//
+//				convertedMessages.add(message);
+//			}
 
 			// chatModelService.setMessages(convertedMessages);
-			response.add(chatModelService);
-		}
+//			response.add(chatModelService);
+//		}
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 
