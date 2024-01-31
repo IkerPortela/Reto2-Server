@@ -12,42 +12,48 @@ public class ChatServiceModel {
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 
-	private User creator;
+	private UserServiceModel creator;
 	private Integer creatorId;
-	// @JsonInclude(JsonInclude.Include.NON_NULL)
-	private List<User> users;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private List<UserServiceModel> users;
 
-	 @JsonInclude(JsonInclude.Include.NON_NULL)
-	private List<Message> messages;
-	private Message message;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private List<MessageServiceModel> messages;
+	private MessageServiceModel message;
 
 	public ChatServiceModel() {
 	}
-	
 
 	public ChatServiceModel(Integer id) {
 		super();
 		this.id = id;
 	}
 
+	public ChatServiceModel(Integer id, String name, boolean isPrivate, Integer creatorId) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.isPrivate = isPrivate;
+		this.creatorId = creatorId;
+	}
 
-	public ChatServiceModel(String name, boolean isPrivate, User creator, Integer creatorId) {
+	public ChatServiceModel(String name, boolean isPrivate, UserServiceModel creator, Integer creatorId) {
 		super();
 		this.name = name;
 		this.isPrivate = isPrivate;
 		this.creator = creator;
 		this.creatorId = creatorId;
 	}
-	public ChatServiceModel(Integer id,String name, boolean isPrivate) {
+
+	public ChatServiceModel(Integer id, String name, boolean isPrivate) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.isPrivate = isPrivate;
-	
+
 	}
 
-	
-	public ChatServiceModel(Integer id, String name, boolean isPrivate, Message message) {
+	public ChatServiceModel(Integer id, String name, boolean isPrivate, MessageServiceModel message) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -61,8 +67,8 @@ public class ChatServiceModel {
 		this.isPrivate = isPrivate;
 	}
 
-	public ChatServiceModel(Integer id, String name, boolean isPrivate,
-			User creator, Integer creatorId, List<User> users, List<Message> messages) {
+	public ChatServiceModel(Integer id, String name, boolean isPrivate, UserServiceModel creator, Integer creatorId,
+			List<UserServiceModel> users, List<MessageServiceModel> messages) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -72,13 +78,12 @@ public class ChatServiceModel {
 		this.users = users;
 		this.messages = messages;
 	}
-	
 
-	public Message getMessage() {
+	public MessageServiceModel getMessage() {
 		return message;
 	}
 
-	public void setMessage(Message message) {
+	public void setMessage(MessageServiceModel message) {
 		this.message = message;
 	}
 
@@ -106,11 +111,11 @@ public class ChatServiceModel {
 		this.isPrivate = isPrivate;
 	}
 
-	public User getCreator() {
+	public UserServiceModel getCreator() {
 		return creator;
 	}
 
-	public void setCreator(User creator) {
+	public void setCreator(UserServiceModel creator) {
 		this.creator = creator;
 	}
 
@@ -122,25 +127,26 @@ public class ChatServiceModel {
 		this.creatorId = creatorId;
 	}
 
-	public List<User> getUsers() {
+	public List<UserServiceModel> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(List<UserServiceModel> users) {
 		this.users = users;
 	}
 
-	public List<Message> getMessages() {
+	public List<MessageServiceModel> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(List<Message> messages) {
+	public void setMessages(List<MessageServiceModel> messages) {
 		this.messages = messages;
 	}
 
 	@Override
 	public String toString() {
-		return "ChatServiceModel [id=" + id + ", name=" + name + ", isPrivate=" + isPrivate + ", createdAt="  + ", creator=" + creator + ", creatorId=" + creatorId + ", users=" + users
-				+ ", messages=" + messages + "]";
+		return "ChatServiceModel [id=" + id + ", name=" + name + ", isPrivate=" + isPrivate + ", createdAt="
+				+ ", creator=" + creator + ", creatorId=" + creatorId + ", users=" + users + ", messages=" + messages
+				+ "]";
 	}
 }

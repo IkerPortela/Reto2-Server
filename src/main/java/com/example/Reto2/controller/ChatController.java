@@ -56,8 +56,7 @@ public class ChatController {
 				message.setChatId(messageServiceModel.getChatId());
 				convertedMessages.add(message);
 			}
-
-			chatModelService.setMessages(convertedMessages);
+			//chatModelService.setMessage(convertedMessages);
 			response.add(chatModelService);
 		}
 
@@ -68,7 +67,33 @@ public class ChatController {
 	public ResponseEntity<List<ChatServiceModel>> getUserChatsByAuth(Authentication authentication) {
 		User userDetails = (User) authentication.getPrincipal();
 		List<ChatServiceModel> response = chatService.getUserChats(userDetails.getId());
+		for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(userDetails.getId())) {
+			List<MessageServiceModel> messages = messageService.getAllMessagesByChatId(chatModelService.getId());
+
+			List<Message> convertedMessages = new ArrayList<>();
+			for (MessageServiceModel messageServiceModel : messages) {
+				Message message = new Message();
+				message.setText(messageServiceModel.getText());
+				message.setImagePath(messageServiceModel.getImagePath());
+				message.setSend(messageServiceModel.isSend());
+				message.setUserId(messageServiceModel.getUserId());
+				message.setChatId(messageServiceModel.getChatId());
+
+				convertedMessages.add(message);
+			}
+
+			// chatModelService.setMessages(convertedMessages);
+			response.add(chatModelService);
+		}
+
 		return new ResponseEntity<>(response, HttpStatus.OK);
+
+	}
+
+	@GetMapping("/chats/public")
+	public ResponseEntity<List<ChatServiceModel>> getPublicChats() {
+		List<ChatServiceModel> response = chatService.getAllPublicChats();
+		return new ResponseEntity<List<ChatServiceModel>>(response, HttpStatus.CREATED);
 	}
 
 	@PostMapping("/chats")
@@ -103,10 +128,10 @@ public class ChatController {
 		return new ResponseEntity<ChatServiceModel>(response, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/chats/{id}")
-	public ResponseEntity<?> deleteChat(@PathVariable("id") Integer id) {
-		chatService.deleteChatById(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+	@DeleteMapping("/chats/delete")
+	public ResponseEntity<Integer> deleteChat(@RequestParam Integer chatId, Authentication authentication) {
+		chatService.deleteChatById(chatId, authentication);
+		return new ResponseEntity<Integer>(HttpStatus.OK);
 	}
 
 	@DeleteMapping("/chats/leave")
@@ -114,18 +139,25 @@ public class ChatController {
 		chatService.leaveChat(chatId, authentication);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/chats/noPrivate")
 	public ResponseEntity<List<ChatServiceModel>> getChatNoPrivate(Authentication authentication) {
 		User userDetails = (User) authentication.getPrincipal();
 		List<ChatServiceModel> allPublicChats = chatService.getAllPublicChats();
 		List<ChatServiceModel> userChats = chatService.getUserChats(userDetails.getId());
-		
-		List<ChatServiceModel> publicChatsNotInUser = allPublicChats.stream()
-	            .filter(chat -> !userChats.contains(chat))
-	            .collect(Collectors.toList());
+
+		List<ChatServiceModel> publicChatsNotInUser = allPublicChats.stream().filter(chat -> !userChats.contains(chat))
+				.collect(Collectors.toList());
 		System.out.println(publicChatsNotInUser.toString());
 		return new ResponseEntity<>(publicChatsNotInUser, HttpStatus.OK);
 	}
+
+	@DeleteMapping("/chats/disassign")
+	public ResponseEntity<?> disassignUserFromChat(Authentication authentication,
+			@RequestParam Integer chatId, @RequestParam Integer userId){
+			chatService.disassignFromChat(authentication, chatId, userId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 
 }

@@ -10,11 +10,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.example.Reto2.model.Chat;
 import com.example.Reto2.model.Role;
 import com.example.Reto2.model.RoleEnum;
+import com.example.Reto2.model.RoleServiceModel;
 import com.example.Reto2.model.User;
 import com.example.Reto2.model.UserServiceModel;
+import com.example.Reto2.repository.ChatRepository;
 import com.example.Reto2.repository.RoleRepository;
 import com.example.Reto2.repository.UserRepository;
 
@@ -23,16 +27,19 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 	@Autowired
 	UserRepository userRepository;
 	@Autowired
+	ChatRepository chatRepository;
+	@Autowired
 	RoleRepository roleRepository;
 
 	@Override
-	public User create(User user) {
+	public UserServiceModel create(User user) {
 		List<Role> roles = new ArrayList<Role>();
 		Role role = roleRepository.findByName(RoleEnum.PROFESOR.toString());
 		roles.add(role);
 		user.setRoles(roles);
-
-		return userRepository.save(user);
+		userRepository.save(user);
+		
+		return null;
 	}
 
 	@Override
@@ -53,6 +60,7 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 	public UserServiceModel findBy(Integer id) {
 		User response = userRepository.findById(id)
 				.orElseThrow(() -> new UsernameNotFoundException(HttpStatus.NO_CONTENT + "not found"));
+		
 		UserServiceModel userServiceModel = new UserServiceModel(
 				response.getId(),
 				response.getEmail(),
@@ -62,12 +70,63 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 				response.getAddress(),
 				response.getPhone(),
 				response.getDni(),
-				response.getRoles());
+				null);
+    	List<Role> userRoles = response.getRoles();
+    	List<RoleServiceModel> convertedRoleList = new ArrayList<>(); 
+    	for(Role role : userRoles) {
+    		RoleServiceModel roleServiceModel = new RoleServiceModel(
+    				role.getId(),
+    				role.getName()
+    				);
+    		convertedRoleList.add(roleServiceModel);
+    	}
+    			userServiceModel.setRoles(convertedRoleList);
+		
 		System.out.println(userServiceModel.toString());
 		return userServiceModel;
 	}
 
 	public User update(User user) {
+		
 		return userRepository.save(user);
+	}
+
+	@Override
+	public List<UserServiceModel> getAllUsersByChatId(Integer chatId) {
+		
+	    Chat chat = chatRepository.findById(chatId)
+	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chat no encontrado"));
+	    
+	    List<User> chatUsers = chat.getUsers();
+	    
+	    List<UserServiceModel> response = new ArrayList<>();
+
+	    for(User user : chatUsers) {
+	    	UserServiceModel userServiceModel = new UserServiceModel(
+	    			user.getId(),
+	    			user.getEmail(),
+	    			user.getPassword(),
+	    			user.getName(),
+	    			user.getSurname(),
+	    			user.getAddress(),
+	    			user.getPhone(),
+	    			user.getDni(),
+	    			null
+	    			);
+	    	
+	    	List<Role> userRoles = user.getRoles();
+	    	List<RoleServiceModel> convertedRoleList = new ArrayList<>(); 
+	    	for(Role role : userRoles) {
+	    		RoleServiceModel roleServiceModel = new RoleServiceModel(
+	    				role.getId(),
+	    				role.getName()
+	    				);
+	    		convertedRoleList.add(roleServiceModel);
+	    	}
+	    			userServiceModel.setRoles(convertedRoleList);
+	    			response.add(userServiceModel);
+
+	    }
+	    return response;
 	}
 }

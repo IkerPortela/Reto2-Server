@@ -63,6 +63,8 @@ public class WebSecurityConfig {
 				.requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/signup", "/api/chats/assign", "/api/chats/join").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/auth/users","/api/chats").permitAll()
 				.requestMatchers(HttpMethod.DELETE, "/api/chats/{id}", "/api/chats/leave").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/auth/users","/api/chats/{userId}", "/api/users/chat").permitAll()
+				.requestMatchers(HttpMethod.DELETE, "/api/chats/delete", "/api/chats/leave", "/api/chats/disassign").permitAll()
 				
 				.requestMatchers(HttpMethod.PUT, "/api/auth/users", "/api/chats/{id}").authenticated()
 				.requestMatchers(HttpMethod.POST, "/api/chats").permitAll()

@@ -48,7 +48,7 @@ public class User implements UserDetails {
 	@Column(length = 100)
 	private String address;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "role_user",
 			// relacion con tabla actual (user)
 			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_id")),
@@ -58,7 +58,7 @@ public class User implements UserDetails {
 	@JsonManagedReference
 	private List<Role> roles;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "chats_users",
 			// relacion con tabla actual (user)
 			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_id")),
