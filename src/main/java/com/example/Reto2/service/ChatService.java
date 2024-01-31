@@ -9,7 +9,7 @@ import com.example.Reto2.model.ChatServiceModel;
 
 public interface ChatService {
 
-	List<ChatServiceModel> getAllChatsByUserId(Authentication authentication);
+	List<ChatServiceModel> getAllChatsByUserId(Integer id);
 	List<ChatServiceModel> getUserChats(Integer id);
 
 	List<ChatServiceModel> getAllPrivateChats();

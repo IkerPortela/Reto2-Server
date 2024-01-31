@@ -2,6 +2,7 @@ package com.example.Reto2.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,47 +38,73 @@ public class ChatController {
 	private MessageService messageService;
 	@Autowired
 	private UserService userService;
-	
+
 	@GetMapping("/chats/userChats")
 	public ResponseEntity<List<ChatServiceModel>> getChatsById(Authentication authentication) {
-	    List<ChatServiceModel> response = new ArrayList<>();
-	    for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(authentication)) {
-	        List<MessageServiceModel> messages = messageService.getAllMessagesByChatId(chatModelService.getId());
+		List<ChatServiceModel> response = new ArrayList<>();
+		User userDetails = (User) authentication.getPrincipal();
+		for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(userDetails.getId())) {
+			List<MessageServiceModel> messages = messageService.getAllMessagesByChatId(chatModelService.getId());
 
-	        List<Message> convertedMessages = new ArrayList<>();
-	        for (MessageServiceModel messageServiceModel : messages) {
-	            Message message = new Message();
-	            message.setText(messageServiceModel.getText());
-	            message.setImagePath(messageServiceModel.getImagePath());
-	            message.setSend(messageServiceModel.isSend());
-	            message.setUserId(messageServiceModel.getUserId());
-	            message.setChatId(messageServiceModel.getChatId());
+			List<Message> convertedMessages = new ArrayList<>();
+			for (MessageServiceModel messageServiceModel : messages) {
+				Message message = new Message();
+				message.setText(messageServiceModel.getText());
+				message.setImagePath(messageServiceModel.getImagePath());
+				message.setSend(messageServiceModel.isSend());
+				message.setUserId(messageServiceModel.getUserId());
+				message.setChatId(messageServiceModel.getChatId());
+				convertedMessages.add(message);
+			}
+			//chatModelService.setMessage(convertedMessages);
+			response.add(chatModelService);
+		}
 
-	            convertedMessages.add(message);
-	        }
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
-	        //chatModelService.setMessages(convertedMessages);
-	        response.add(chatModelService);
-	    }
+	@GetMapping("/chats")
+	public ResponseEntity<List<ChatServiceModel>> getUserChatsByAuth(Authentication authentication) {
+		User userDetails = (User) authentication.getPrincipal();
+		List<ChatServiceModel> response = chatService.getUserChats(userDetails.getId());
+//		for (ChatServiceModel chatModelService : chatService.getAllChatsByUserId(userDetails.getId())) {
+//			List<MessageServiceModel> messages = messageService.getAllMessagesByChatId(chatModelService.getId());
+//
+//			List<Message> convertedMessages = new ArrayList<>();
+//			for (MessageServiceModel messageServiceModel : messages) {
+//				Message message = new Message();
+//				message.setText(messageServiceModel.getText());
+//				message.setImagePath(messageServiceModel.getImagePath());
+//				message.setSend(messageServiceModel.isSend());
+//				message.setUserId(messageServiceModel.getUserId());
+//				message.setChatId(messageServiceModel.getChatId());
+//
+//				convertedMessages.add(message);
+//			}
 
-	    return new ResponseEntity<>(response, HttpStatus.OK);
+			// chatModelService.setMessages(convertedMessages);
+//			response.add(chatModelService);
+//		}
+
+		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}
 
 	@GetMapping("/chats/public")
-	public ResponseEntity<List<ChatServiceModel>> getPublicChats(){
+	public ResponseEntity<List<ChatServiceModel>> getPublicChats() {
 		List<ChatServiceModel> response = chatService.getAllPublicChats();
-		return new ResponseEntity<List<ChatServiceModel>>(response,HttpStatus.CREATED);
+		return new ResponseEntity<List<ChatServiceModel>>(response, HttpStatus.CREATED);
 	}
+
 	@PostMapping("/chats")
-	public ResponseEntity<ChatServiceModel> createChat(@RequestBody ChatPostRequest request, Authentication authentication){
+	public ResponseEntity<ChatServiceModel> createChat(@RequestBody ChatPostRequest request,
+			Authentication authentication) {
 		User creatorDetails = (User) authentication.getPrincipal();
 		UserServiceModel creator = userService.findBy(creatorDetails.getId());
 		request.setCreatorId(creator.getId());
 		ChatServiceModel result = chatService.createChat(authentication, request);
-		return new ResponseEntity<ChatServiceModel>(result,HttpStatus.CREATED);
+		return new ResponseEntity<ChatServiceModel>(result, HttpStatus.CREATED);
 	}
-	
 
 	@PostMapping("/chats/assign")
 	public ResponseEntity<ChatServiceModel> assignUserToChat(Authentication authentication,
@@ -112,14 +139,25 @@ public class ChatController {
 		chatService.leaveChat(chatId, authentication);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
+	@GetMapping("/chats/noPrivate")
+	public ResponseEntity<List<ChatServiceModel>> getChatNoPrivate(Authentication authentication) {
+		User userDetails = (User) authentication.getPrincipal();
+		List<ChatServiceModel> allPublicChats = chatService.getAllPublicChats();
+		List<ChatServiceModel> userChats = chatService.getUserChats(userDetails.getId());
+
+		List<ChatServiceModel> publicChatsNotInUser = allPublicChats.stream().filter(chat -> !userChats.contains(chat))
+				.collect(Collectors.toList());
+		System.out.println(publicChatsNotInUser.toString());
+		return new ResponseEntity<>(publicChatsNotInUser, HttpStatus.OK);
+	}
+
 	@DeleteMapping("/chats/disassign")
 	public ResponseEntity<?> disassignUserFromChat(Authentication authentication,
 			@RequestParam Integer chatId, @RequestParam Integer userId){
 			chatService.disassignFromChat(authentication, chatId, userId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
-	
+
 
 }

@@ -14,15 +14,21 @@ public class ChatServiceModel {
 
 	private UserServiceModel creator;
 	private Integer creatorId;
-	 @JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<UserServiceModel> users;
 
-	 @JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private List<MessageServiceModel> messages;
 	private MessageServiceModel message;
 
 	public ChatServiceModel() {
 	}
+
+	public ChatServiceModel(Integer id) {
+		super();
+		this.id = id;
+	}
+
 	public ChatServiceModel(Integer id, String name, boolean isPrivate, Integer creatorId) {
 		super();
 		this.id = id;
@@ -38,7 +44,15 @@ public class ChatServiceModel {
 		this.creator = creator;
 		this.creatorId = creatorId;
 	}
-	
+
+	public ChatServiceModel(Integer id, String name, boolean isPrivate) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.isPrivate = isPrivate;
+
+	}
+
 	public ChatServiceModel(Integer id, String name, boolean isPrivate, MessageServiceModel message) {
 		super();
 		this.id = id;
@@ -53,8 +67,8 @@ public class ChatServiceModel {
 		this.isPrivate = isPrivate;
 	}
 
-	public ChatServiceModel(Integer id, String name, boolean isPrivate,
-			UserServiceModel creator, Integer creatorId, List<UserServiceModel> users, List<MessageServiceModel> messages) {
+	public ChatServiceModel(Integer id, String name, boolean isPrivate, UserServiceModel creator, Integer creatorId,
+			List<UserServiceModel> users, List<MessageServiceModel> messages) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -64,7 +78,6 @@ public class ChatServiceModel {
 		this.users = users;
 		this.messages = messages;
 	}
-	
 
 	public MessageServiceModel getMessage() {
 		return message;
@@ -132,7 +145,8 @@ public class ChatServiceModel {
 
 	@Override
 	public String toString() {
-		return "ChatServiceModel [id=" + id + ", name=" + name + ", isPrivate=" + isPrivate + ", createdAt="  + ", creator=" + creator + ", creatorId=" + creatorId + ", users=" + users
-				+ ", messages=" + messages + "]";
+		return "ChatServiceModel [id=" + id + ", name=" + name + ", isPrivate=" + isPrivate + ", createdAt="
+				+ ", creator=" + creator + ", creatorId=" + creatorId + ", users=" + users + ", messages=" + messages
+				+ "]";
 	}
 }

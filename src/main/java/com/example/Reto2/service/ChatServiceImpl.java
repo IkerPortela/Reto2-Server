@@ -34,67 +34,63 @@ public class ChatServiceImpl implements ChatService {
 
 	@Override
 	public List<ChatServiceModel> getUserChats(Integer id) {
-		List<ChatServiceModel> ret = null;
+		List<ChatServiceModel> ret = new ArrayList<ChatServiceModel>();
 
 		Optional<User> userOptional = userRepository.findById(id);
 		User user = userOptional.get();
 
 		for (Chat chat : user.getChats()) {
-
-			ret = null == ret ? new ArrayList<ChatServiceModel>() : ret;
-
 			ChatServiceModel chatServiceModel = new ChatServiceModel();
 			chatServiceModel.setId(chat.getId());
 			chatServiceModel.setName(chat.getName());
 			chatServiceModel.setPrivate(chat.isPrivate());
-
 			ret.add(chatServiceModel);
 		}
 
 		return ret;
 	}
 
-	public List<ChatServiceModel> getAllChatsByUserId(Authentication authentication) {
+	@Override
+	public List<ChatServiceModel> getAllChatsByUserId(Integer id) {
 
-		User userDetails = (User) authentication.getPrincipal();
-		User user = userRepository.findById(userDetails.getId())
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Usuario no encontrado"));
-		List<ChatServiceModel> ret = new ArrayList<>();
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Usuario no encontrado"));
+        List<ChatServiceModel> ret = new ArrayList<>();
 
-		for (Chat chat : user.getChats()) {
-			
-			ret = null == ret? new ArrayList<ChatServiceModel> () : ret;
-			
+        for (Chat chat : user.getChats()) {
+            
+            ret = null == ret? new ArrayList<ChatServiceModel> () : ret;
+            
 
-			ret = null == ret ? new ArrayList<ChatServiceModel>() : ret;
+            ret = null == ret ? new ArrayList<ChatServiceModel>() : ret;
 
-			ChatServiceModel chatServiceModel = new ChatServiceModel(
-					chat.getId(),
-					chat.getName(),
-					chat.isPrivate(),
-					chat.getCreatorId()
-					);
-			
-			List<Message> chatMessages = chat.getMessages();
-			List<MessageServiceModel> convertedMessages = new ArrayList<>();
-			
-			for(Message message : chatMessages) {
-				MessageServiceModel messageServiceModel = new MessageServiceModel(
-						message.getId(),
-						message.getText(),
-						message.isSend(),
-						message.getUserId(),
-						message.getChatId()
-						);
-				convertedMessages.add(messageServiceModel);
-			}
-			chatServiceModel.setMessage(mensajeReciente(convertedMessages));
+            ChatServiceModel chatServiceModel = new ChatServiceModel(
+                    chat.getId(),
+                    chat.getName(),
+                    chat.isPrivate(),
+                    chat.getCreatorId()
+                    );
+            
+            List<Message> chatMessages = chat.getMessages();
+            List<MessageServiceModel> convertedMessages = new ArrayList<>();
+            
+            for(Message message : chatMessages) {
+                MessageServiceModel messageServiceModel = new MessageServiceModel(
+                        message.getId(),
+                        message.getText(),
+                        message.isSend(),
+                        message.getUserId(),
+                        message.getChatId()
+                        );
+                convertedMessages.add(messageServiceModel);
+            }
+            chatServiceModel.setMessage(mensajeReciente(convertedMessages));
 
-			ret.add(chatServiceModel);
-		}
+            ret.add(chatServiceModel);
+        }
 
-		return ret;
-	}
+        return ret;
+    }
 
 	private MessageServiceModel mensajeReciente(List<MessageServiceModel> messages) {
 		MessageServiceModel ret = null;
@@ -119,12 +115,8 @@ public class ChatServiceImpl implements ChatService {
 
 		for (Chat chat : chatsById) {
 			if (chat.isPrivate()) {
-				ChatServiceModel chatServiceModel = new ChatServiceModel(
-						chat.getId(),
-						chat.getName(),
-						chat.isPrivate(),
-						chat.getCreatorId()
-						);
+				ChatServiceModel chatServiceModel = new ChatServiceModel(chat.getId(), chat.getName(), chat.isPrivate(),
+						chat.getCreatorId());
 				response.add(chatServiceModel);
 			}
 		}
@@ -139,12 +131,8 @@ public class ChatServiceImpl implements ChatService {
 
 		for (Chat chat : chatsById) {
 			if (chat.isPrivate() == false) {
-				ChatServiceModel chatServiceModel = new ChatServiceModel(
-						chat.getId(),
-						chat.getName(),
-						chat.isPrivate(),
-						chat.getCreatorId()
-						);
+				ChatServiceModel chatServiceModel = new ChatServiceModel(chat.getId(), chat.getName(),
+						chat.isPrivate());
 
 				response.add(chatServiceModel);
 			}
@@ -163,56 +151,35 @@ public class ChatServiceImpl implements ChatService {
 		List<Role> userRoles = new ArrayList<>();
 		userRoles = user.getRoles();
 		if (!chatPostRequest.isPrivate()) {
-			Chat chat = new Chat(
-					chatPostRequest.getName(), 
-					chatPostRequest.isPrivate(), 
-					creator
-					);
-			UserServiceModel convertedUser = new UserServiceModel(
-					user.getId(),
-					user.getEmail()
-					);
+			Chat chat = new Chat(chatPostRequest.getName(), chatPostRequest.isPrivate(), creator);
+			UserServiceModel convertedUser = new UserServiceModel(user.getId(), user.getEmail());
 			List<User> creatorInChat = new ArrayList<>();
 			creatorInChat.add(user);
 			chat.setUsers(creatorInChat);
 			chatRepository.save(chat);
 
-			ChatServiceModel response = new ChatServiceModel(
-					chat.getName(), 
-					chat.isPrivate(), 
-					convertedUser,
-					convertedUser.getId()
-					);
+			ChatServiceModel response = new ChatServiceModel(chat.getName(), chat.isPrivate(), convertedUser,
+					convertedUser.getId());
 
 			return response;
 		} else {
 			for (Role role : userRoles) {
 				if (role.getName().equals("Profesor")) {
-					Chat chat = new Chat(
-							chatPostRequest.getName(), 
-							chatPostRequest.isPrivate(), 
-							creator
-							);
-					UserServiceModel convertedUser = new UserServiceModel(
-							user.getId(),
-							user.getEmail()
-							);
+					Chat chat = new Chat(chatPostRequest.getName(), chatPostRequest.isPrivate(), creator);
+					UserServiceModel convertedUser = new UserServiceModel(user.getId(), user.getEmail());
 					List<User> creatorInChat = new ArrayList<>();
 					creatorInChat.add(user);
 					chat.setUsers(creatorInChat);
 					chatRepository.save(chat);
 
-					ChatServiceModel response = new ChatServiceModel(
-							chat.getName(), 
-							chat.isPrivate(), 
-							convertedUser,
-							convertedUser.getId()
-							);
+					ChatServiceModel response = new ChatServiceModel(chat.getName(), chat.isPrivate(), convertedUser,
+							convertedUser.getId());
 					return response;
 				}
-				
-				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Solo los profesores tienen permiso para hacer chats privados");
-				
+
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+						"Solo los profesores tienen permiso para hacer chats privados");
+
 			}
 			return null;
 
@@ -229,53 +196,46 @@ public class ChatServiceImpl implements ChatService {
 		}
 
 		chat = chatRepository.save(chat);
-		ChatServiceModel response = new ChatServiceModel(
-				chat.getId(), 
-				chat.getName(), 
-				chat.isPrivate(),
-				chat.getCreatorId()
-				);
+		ChatServiceModel response = new ChatServiceModel(chat.getId(), chat.getName(), chat.isPrivate(),
+				chat.getCreatorId());
 
 		return response;
 	}
 
 	@Override
 	public void deleteChatById(Integer chatId, Authentication authentication) {
-	    Chat chat = chatRepository.findById(chatId)
-	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chat no encontrado"));
+		Chat chat = chatRepository.findById(chatId)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chat no encontrado"));
 
-	    User userDetails = (User) authentication.getPrincipal();
-	    User user = userRepository.findById(userDetails.getId())
-	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+		User userDetails = (User) authentication.getPrincipal();
+		User user = userRepository.findById(userDetails.getId())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
-	    List<Role> userRoles = user.getRoles();
+		List<Role> userRoles = user.getRoles();
 
-	    for (Role role : userRoles) {
-	        if (role.getName().equals("Estudiante") && chat.getCreatorId().equals(user.getId())) {
-	            if (!chat.isPrivate()) {
-	                chatRepository.deleteById(chatId);
-	                return;
-	            }
-	        } else if (role.getName().equals("Profesor")) {
-	            if (!chat.isPrivate() || (chat.isPrivate() && chat.getCreatorId().equals(user.getId()))) {
-	                chatRepository.deleteById(chatId);
-	                return;
-	            }
-	        }
-	    }
+		for (Role role : userRoles) {
+			if (role.getName().equals("Estudiante") && chat.getCreatorId().equals(user.getId())) {
+				if (!chat.isPrivate()) {
+					chatRepository.deleteById(chatId);
+					return;
+				}
+			} else if (role.getName().equals("Profesor")) {
+				if (!chat.isPrivate() || (chat.isPrivate() && chat.getCreatorId().equals(user.getId()))) {
+					chatRepository.deleteById(chatId);
+					return;
+				}
+			}
+		}
 
-	    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permisos para eliminar este chat");
+		throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permisos para eliminar este chat");
 	}
-
-
-
 
 	@Override
 	public ChatServiceModel assignToChat(Authentication authentication, Integer chatId, Integer userId) {
 
 		User userDetails = (User) authentication.getPrincipal();
 		UserServiceModel teacher = userService.findBy(userDetails.getId());
-			
+
 		Chat chat = chatRepository.findById(chatId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
 
@@ -289,26 +249,23 @@ public class ChatServiceImpl implements ChatService {
 				chat.getUsers().add(user);
 				chatRepository.save(chat);
 			} else {
-				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permisos para asignar a un usuario en este chat");
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+						"No tienes permisos para asignar a un usuario en este chat");
 			}
 
 		}
 
-			ChatServiceModel response = new ChatServiceModel(
-					chat.getId(), 
-					chat.getName(), 
-					chat.isPrivate(),
-					chat.getCreatorId()
-					);
-	return response;
+		ChatServiceModel response = new ChatServiceModel(chat.getId(), chat.getName(), chat.isPrivate(),
+				chat.getCreatorId());
+		return response;
 	}
-	
+
 	@Override
 	public ChatServiceModel disassignFromChat(Authentication authentication, Integer chatId, Integer userId) {
 
 		User userDetails = (User) authentication.getPrincipal();
 		UserServiceModel teacher = userService.findBy(userDetails.getId());
-			
+
 		Chat chat = chatRepository.findById(chatId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
 
@@ -322,19 +279,18 @@ public class ChatServiceImpl implements ChatService {
 				chat.getUsers().remove(user);
 				chatRepository.save(chat);
 			} else {
-				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permisos para asignar a un usuario en este chat");
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+						"No tienes permisos para asignar a un usuario en este chat");
 			}
 
 		}
 
-			ChatServiceModel response = new ChatServiceModel(
-					chat.getId(), 
-					chat.getName(), 
-					chat.isPrivate(),
-					chat.getCreatorId()
-					);
-	return response;
+		ChatServiceModel response = new ChatServiceModel(chat.getId(), chat.getName(), chat.isPrivate(),
+				chat.getCreatorId());
+		return response;
 	}
+
+
 
 	@Override
 	public ChatServiceModel joinChat(Integer chatId, Authentication authentication) {
@@ -344,15 +300,12 @@ public class ChatServiceImpl implements ChatService {
 
 		User userDetails = (User) authentication.getPrincipal();
 		UserServiceModel user = userService.findBy(userDetails.getId());
-		
-		User addUser = new User(
-				user.getId(),
-				user.getEmail(),
-				user.getPassword());
-	
-	    	chat.getUsers().add(addUser);
-	    	chatRepository.save(chat);
-	    	return null;
+
+		User addUser = new User(user.getId(), user.getEmail(), user.getPassword());
+
+		chat.getUsers().add(addUser);
+		chatRepository.save(chat);
+		return null;
 	}
 
 	
@@ -366,27 +319,27 @@ public class ChatServiceImpl implements ChatService {
 		User userDetails = (User) authentication.getPrincipal();
 		User user = userRepository.findById(userDetails.getId())
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Usuario no encontrado"));
-		
+
 		List<User> updatedList = new ArrayList<>();
 		List<User> chatWithUsers = chat.getUsers();
 
 		List<Role> userRoles = user.getRoles();
 		for (Role role : userRoles) {
-			if(role.getName().equals("Estudiante") && chat.isPrivate() == false) {
+			if (role.getName().equals("Estudiante") && chat.isPrivate() == false) {
 				for (User chatUser : chatWithUsers) {
 					if (!chatUser.getId().equals(user.getId())) {
-							updatedList.add(chatUser);
+						updatedList.add(chatUser);
 					}
-				}	
-			} else if(role.getName().equals("Estudiante") && chat.isPrivate() == true){
+				}
+			} else if (role.getName().equals("Estudiante") && chat.isPrivate() == true) {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permisos para salirte de este chat");
-			
+
 			} else if (role.getName().equals("Profesor")) {
 				for (User chatUser : chatWithUsers) {
 					if (!chatUser.getId().equals(user.getId())) {
-							updatedList.add(chatUser);
+						updatedList.add(chatUser);
 					}
-				}	
+				}
 			}
 		}
 
