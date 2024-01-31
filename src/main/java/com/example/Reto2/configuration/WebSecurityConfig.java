@@ -61,13 +61,13 @@ public class WebSecurityConfig {
 				// vamos a permitir registro y login para todos. Al no especificar metodo
 				// podran hacer todos los metodos a dichas urls...
 				.requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/signup", "/api/chats/assign", "/api/chats/join").permitAll()
-				.requestMatchers(HttpMethod.GET, "/api/auth/users","/api/chats/{userId}").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/auth/users","/api/chats").permitAll()
 				.requestMatchers(HttpMethod.DELETE, "/api/chats/{id}", "/api/chats/leave").permitAll()
 				
 				.requestMatchers(HttpMethod.PUT, "/api/auth/users", "/api/chats/{id}").authenticated()
 				.requestMatchers(HttpMethod.POST, "/api/chats").permitAll()
 				.requestMatchers(HttpMethod.PUT, "/api/chats/{id}").permitAll()
-				.requestMatchers(HttpMethod.GET,"/api/auth/me", "/api/auth/myInfo","/api/sockets/leave-room/{room}/{idUser}","/api/sockets/join-room/{room}/{idUser}","/api/sockets/send-message").authenticated()
+				.requestMatchers(HttpMethod.GET,"/api/auth/me", "/api/chats/noPrivate","/api/auth/myInfo","/api/sockets/leave-room/{room}/{idUser}","/api/messages/{chatId}","/api/sockets/join-room/{room}/{idUser}","/api/sockets/send-message").authenticated()
 				
 				//.anyRequest().authenticated()
 				.anyRequest().permitAll()

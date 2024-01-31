@@ -24,7 +24,10 @@ public class MessageServiceImpl implements MessageService{
 	public List<MessageServiceModel> getAllMessagesByChatId(Integer chatId) {
 		Optional<Chat> chatOptional = chatRepository.findById(chatId);
 		Chat chat = chatOptional.get();
-		
+		if (chat == null) {
+			System.out.println("No se ha encontrado chat");
+
+		}
 		List<Message> messages = chat.getMessages();
 		
 		List<MessageServiceModel> response = new ArrayList<>();

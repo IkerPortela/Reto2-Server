@@ -23,6 +23,13 @@ public class ChatServiceModel {
 
 	public ChatServiceModel() {
 	}
+	
+
+	public ChatServiceModel(Integer id) {
+		super();
+		this.id = id;
+	}
+
 
 	public ChatServiceModel(String name, boolean isPrivate, User creator, Integer creatorId) {
 		super();
@@ -31,9 +38,15 @@ public class ChatServiceModel {
 		this.creator = creator;
 		this.creatorId = creatorId;
 	}
+	public ChatServiceModel(Integer id,String name, boolean isPrivate) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.isPrivate = isPrivate;
 	
+	}
 
-
+	
 	public ChatServiceModel(Integer id, String name, boolean isPrivate, Message message) {
 		super();
 		this.id = id;
