@@ -14,11 +14,21 @@ public class MessageServiceModel {
 	
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Integer chatId;
-	private String createdAt; 
 
 	
 	public MessageServiceModel() {}
 
+	public MessageServiceModel(Integer id, String text,
+			boolean isSend,  Integer userId,  Integer chatId) {
+		super();
+		this.id = id;
+		this.text = text;
+		this.isSend = isSend;
+		this.userId = userId;
+		this.chatId = chatId;
+	
+	}
+	
 	public MessageServiceModel(Integer id, String text, String imagePath,
 			boolean isSend,  Integer userId,  Integer chatId) {
 		super();

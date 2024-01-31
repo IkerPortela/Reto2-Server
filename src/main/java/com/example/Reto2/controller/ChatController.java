@@ -56,7 +56,7 @@ public class ChatController {
 	            convertedMessages.add(message);
 	        }
 
-	        chatModelService.setMessages(convertedMessages);
+	        //chatModelService.setMessages(convertedMessages);
 	        response.add(chatModelService);
 	    }
 

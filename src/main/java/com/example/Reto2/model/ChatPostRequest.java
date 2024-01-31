@@ -12,8 +12,6 @@ public class ChatPostRequest {
 	private String name;
 	private boolean isPrivate;
 	private Integer creatorId;
-	// private List<User> users;
-	// private List<Message> messages;
 
 	public ChatPostRequest() {
 	}

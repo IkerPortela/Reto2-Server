@@ -16,13 +16,13 @@ public class UserServiceModel {
 	private String dni;
 
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private List<Role> roles;
+	private List<RoleServiceModel> roles;
 	
 	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private List<Chat> chats;
+	private List<ChatServiceModel> chats;
 
 	public UserServiceModel() {}
-	public UserServiceModel(Integer id, String email, String password, List<Role> roles, List<Chat> chats) {
+	public UserServiceModel(Integer id, String email, String password, List<RoleServiceModel> roles, List<ChatServiceModel> chats) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -30,17 +30,22 @@ public class UserServiceModel {
 		this.roles = roles;
 		this.chats = chats;
 	}
-	public UserServiceModel(Integer id, String email, List<Role> roles) {
+	
+	public UserServiceModel(Integer id, String email, List<RoleServiceModel> roles) {
 		super();
 		this.id = id;
 		this.email = email;
 		this.roles = roles;
 	}
 	
-	
+	public UserServiceModel(Integer id, String email) {
+		super();
+		this.id = id;
+		this.email = email;
+	}
 
 	public UserServiceModel(Integer id, String email, String password, String name, String surname, String address,
-			int phone, String dni, List<Role> roles) {
+			int phone, String dni, List<RoleServiceModel> roles) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -106,19 +111,19 @@ public class UserServiceModel {
 		this.password = password;
 	}
 
-	public List<Role> getRoles() {
+	public List<RoleServiceModel> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Role> roles) {
+	public void setRoles(List<RoleServiceModel> roles) {
 		this.roles = roles;
 	}
 	
-	public List<Chat> getChats() {
+	public List<ChatServiceModel> getChats() {
 		return chats;
 	}
 	
-	public void setChats(List<Chat> chats) {
+	public void setChats(List<ChatServiceModel> chats) {
 		this.chats = chats;
 	}
 	@Override

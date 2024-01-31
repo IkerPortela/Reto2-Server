@@ -33,7 +33,7 @@ public class Chat {
 	@Column()
 	private boolean isPrivate;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "creator_id", foreignKey=@ForeignKey(name = "Fk_user_id"))
 	@JsonManagedReference
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -42,7 +42,7 @@ public class Chat {
 	@Column(name="creator_id", insertable=false, updatable=false)
 	private Integer creatorId;
 	
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "chats_users",
             joinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_chat_id")),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_user_id")))

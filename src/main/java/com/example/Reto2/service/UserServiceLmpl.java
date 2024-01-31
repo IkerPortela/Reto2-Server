@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.example.Reto2.model.Chat;
 import com.example.Reto2.model.Role;
 import com.example.Reto2.model.RoleEnum;
+import com.example.Reto2.model.RoleServiceModel;
 import com.example.Reto2.model.User;
 import com.example.Reto2.model.UserServiceModel;
 import com.example.Reto2.repository.ChatRepository;
@@ -59,6 +60,7 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 	public UserServiceModel findBy(Integer id) {
 		User response = userRepository.findById(id)
 				.orElseThrow(() -> new UsernameNotFoundException(HttpStatus.NO_CONTENT + "not found"));
+		
 		UserServiceModel userServiceModel = new UserServiceModel(
 				response.getId(),
 				response.getEmail(),
@@ -68,7 +70,18 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 				response.getAddress(),
 				response.getPhone(),
 				response.getDni(),
-				response.getRoles());
+				null);
+    	List<Role> userRoles = response.getRoles();
+    	List<RoleServiceModel> convertedRoleList = new ArrayList<>(); 
+    	for(Role role : userRoles) {
+    		RoleServiceModel roleServiceModel = new RoleServiceModel(
+    				role.getId(),
+    				role.getName()
+    				);
+    		convertedRoleList.add(roleServiceModel);
+    	}
+    			userServiceModel.setRoles(convertedRoleList);
+		
 		System.out.println(userServiceModel.toString());
 		return userServiceModel;
 	}
@@ -87,19 +100,30 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 	    List<User> chatUsers = chat.getUsers();
 	    
 	    List<UserServiceModel> response = new ArrayList<>();
-	    
+
 	    for(User user : chatUsers) {
-	    	UserServiceModel userServiceModel = new UserServiceModel();
-	    			userServiceModel.setId(user.getId());
-	    			userServiceModel.setEmail(user.getEmail());
-	    			userServiceModel.setPassword(user.getPassword());
-	    			userServiceModel.setName(user.getName());
-	    			userServiceModel.setSurname(user.getSurname());
-	    			userServiceModel.setAddress(user.getAddress());
-	    			userServiceModel.setPhone(user.getPhone());
-	    			userServiceModel.setDni(user.getDni());
-	    			userServiceModel.setRoles(user.getRoles());
-	    			
+	    	UserServiceModel userServiceModel = new UserServiceModel(
+	    			user.getId(),
+	    			user.getEmail(),
+	    			user.getPassword(),
+	    			user.getName(),
+	    			user.getSurname(),
+	    			user.getAddress(),
+	    			user.getPhone(),
+	    			user.getDni(),
+	    			null
+	    			);
+	    	
+	    	List<Role> userRoles = user.getRoles();
+	    	List<RoleServiceModel> convertedRoleList = new ArrayList<>(); 
+	    	for(Role role : userRoles) {
+	    		RoleServiceModel roleServiceModel = new RoleServiceModel(
+	    				role.getId(),
+	    				role.getName()
+	    				);
+	    		convertedRoleList.add(roleServiceModel);
+	    	}
+	    			userServiceModel.setRoles(convertedRoleList);
 	    			response.add(userServiceModel);
 
 	    }
