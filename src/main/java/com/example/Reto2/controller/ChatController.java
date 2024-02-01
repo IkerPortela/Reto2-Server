@@ -54,6 +54,8 @@ public class ChatController {
 	public ResponseEntity<List<ChatServiceModel>> getUserChatsByAuth(Authentication authentication) {
 		User userDetails = (User) authentication.getPrincipal();
 		List<ChatServiceModel> response = chatService.getUserChats(userDetails.getId());
+
+
 		return new ResponseEntity<>(response, HttpStatus.OK);
 
 	}
