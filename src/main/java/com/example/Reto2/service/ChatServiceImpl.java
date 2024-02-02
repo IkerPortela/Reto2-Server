@@ -301,6 +301,10 @@ public class ChatServiceImpl implements ChatService {
 		User userDetails = (User) authentication.getPrincipal();
 		UserServiceModel user = userService.findBy(userDetails.getId());
 
+	    if (isUserInChat(chat, user.getId())) {
+	        throw new ResponseStatusException(HttpStatus.CONFLICT, "El usuario ya está en el chat");
+	    }
+	    
 		User addUser = new User(user.getId(), user.getEmail(), user.getPassword());
 
 		chat.getUsers().add(addUser);
@@ -309,7 +313,9 @@ public class ChatServiceImpl implements ChatService {
 	}
 
 	
-
+	private boolean isUserInChat(Chat chat, Integer userId) {
+	    return chat.getUsers().stream().anyMatch(user -> user.getId().equals(userId));
+	}
 	@Override
 	public ChatServiceModel leaveChat(Integer chatId, Authentication authentication) {
 
