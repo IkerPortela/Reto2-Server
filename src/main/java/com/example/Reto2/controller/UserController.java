@@ -23,6 +23,13 @@ public class UserController {
 	@GetMapping("/users/chat")
 	public ResponseEntity<List<UserServiceModel>> getUsersByChatId(@RequestParam Integer chatId){
 		List<UserServiceModel> response = userService.getAllUsersByChatId(chatId);
+		
 		return new ResponseEntity<List<UserServiceModel>>(response,HttpStatus.OK); 
+	}
+	@GetMapping("/users/chat/count")
+	public ResponseEntity<Integer> getCountOfUsers(@RequestParam Integer chatId){
+		List<UserServiceModel> response = userService.getAllUsersByChatId(chatId);
+		Integer count = response.size();
+		return new ResponseEntity<Integer>(count,HttpStatus.OK); 
 	}
 }
