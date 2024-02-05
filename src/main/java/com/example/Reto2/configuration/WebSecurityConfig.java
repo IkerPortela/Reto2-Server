@@ -70,7 +70,8 @@ public class WebSecurityConfig {
 						.authenticated()
 						// LLAMADAS POST
 						.requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/signup").authenticated()
-						.requestMatchers(HttpMethod.POST, "/api/chats", "/api/chats/assign", "/api/chats/join").authenticated()
+						.requestMatchers(HttpMethod.POST, "/api/chats", "/api/chats/assign", "/api/chats/join")
+						.authenticated()
 
 						// LLAMADAS DELETE
 						.requestMatchers(HttpMethod.DELETE, "/api/chats/{id}", "/api/chats/leave").authenticated()
@@ -78,7 +79,7 @@ public class WebSecurityConfig {
 								"/api/chats/disassign")
 						.authenticated()
 
-						//LLAMADAS PUT
+						// LLAMADAS PUT
 						.requestMatchers(HttpMethod.PUT, "/api/auth/users", "/api/chats/{id}").authenticated()
 						.requestMatchers(HttpMethod.PUT, "/api/chats/{id}").authenticated()
 

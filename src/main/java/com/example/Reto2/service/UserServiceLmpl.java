@@ -6,17 +6,20 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.Reto2.model.Chat;
 import com.example.Reto2.model.Role;
 import com.example.Reto2.model.RoleEnum;
 import com.example.Reto2.model.RoleServiceModel;
 import com.example.Reto2.model.User;
+import com.example.Reto2.model.UserPutRequest;
 import com.example.Reto2.model.UserServiceModel;
 import com.example.Reto2.repository.ChatRepository;
 import com.example.Reto2.repository.RoleRepository;
@@ -30,6 +33,8 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 	ChatRepository chatRepository;
 	@Autowired
 	RoleRepository roleRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserServiceModel create(User user) {
@@ -128,5 +133,28 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 
 	    }
 	    return response;
+	}
+
+	@Override
+	public UserServiceModel changePasswordLogged(Authentication authentication, UserPutRequest userPutRequest) {
+		System.out.println(userPutRequest.toString());
+		User userDetails = (User) authentication.getPrincipal();
+		
+		User user = userRepository.findById(userDetails.getId())
+				.orElseThrow(() -> new UsernameNotFoundException(HttpStatus.NO_CONTENT + "not found"));
+		
+		String userEmail = user.getEmail();
+		
+		if(userEmail.equals(userPutRequest.getEmail())) {
+			String encodedPassword = passwordEncoder.encode(userPutRequest.getPassword());
+			user.setPassword(encodedPassword);
+			userRepository.save(user);
+		}
+		
+		UserServiceModel response = new UserServiceModel(
+				user.getEmail(),
+				user.getPassword());
+		
+		return response;
 	}
 }

@@ -44,6 +44,12 @@ public class UserServiceModel {
 		this.email = email;
 	}
 
+	public UserServiceModel(String email, String password) {
+		super();
+		this.email = email;
+		this.password = password;
+	}
+	
 	public UserServiceModel(Integer id, String email, String password, String name, String surname, String address,
 			int phone, String dni, List<RoleServiceModel> roles) {
 		super();
