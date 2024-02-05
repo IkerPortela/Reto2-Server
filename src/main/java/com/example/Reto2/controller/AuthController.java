@@ -20,6 +20,7 @@ import com.example.Reto2.model.AuthRequest;
 import com.example.Reto2.model.AuthResponse;
 import com.example.Reto2.model.UpdateResponse;
 import com.example.Reto2.model.User;
+import com.example.Reto2.model.UserPutRequest;
 import com.example.Reto2.model.UserServiceModel;
 import com.example.Reto2.service.UserService;
 
@@ -120,6 +121,11 @@ public class AuthController {
 		return ResponseEntity.ok().body(userDetails);
 	}
 	
+	@PutMapping("/auth/changePassword")
+	public ResponseEntity<?> changePassword(Authentication authentication, @RequestBody UserPutRequest userPutRequest){	
+		UserServiceModel response = userService.changePasswordLogged(authentication, userPutRequest);
+		return ResponseEntity.ok().body(response);
+	}
 	@GetMapping("/auth/myInfo")
 	public ResponseEntity<?> findById(Authentication authentication) {
 		// aqui podemos castearlo a UserDetails o User. El UserDetails es una interfaz, 
