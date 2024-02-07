@@ -137,7 +137,7 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 
 	@Override
 	public UserServiceModel changePasswordLogged(Authentication authentication, UserPutRequest userPutRequest) {
-		System.out.println(userPutRequest.toString());
+
 		User userDetails = (User) authentication.getPrincipal();
 		
 		User user = userRepository.findById(userDetails.getId())
