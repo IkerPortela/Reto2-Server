@@ -1,5 +1,7 @@
 package com.example.Reto2.model;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.Length;
 
 import jakarta.validation.constraints.Email;
@@ -20,9 +22,29 @@ public class UpdateResponse {
 	private String dni;
 	@NotNull @Length(min = 5, max = 100)
 	private String address;
+	
+	private List<RoleServiceModel> roles;
+	
 	public UpdateResponse() {
 		super();
 	}
+	
+	public UpdateResponse(@NotNull @Email @Length(min = 5, max = 50) String email,
+			@NotNull @Length(min = 5, max = 20) String password, @NotNull @Length(min = 5, max = 100) String name,
+			@NotNull @Length(min = 5, max = 100) String surname, @NotNull @Length(min = 5, max = 20) Integer phone,
+			@NotNull @Length(min = 5, max = 20) String dni, @NotNull @Length(min = 5, max = 100) String address,
+			List<RoleServiceModel> roles) {
+		super();
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.surname = surname;
+		this.phone = phone;
+		this.dni = dni;
+		this.address = address;
+		this.roles = roles;
+	}
+
 	public UpdateResponse(@NotNull @Email @Length(min = 5, max = 50) String email,
 			@NotNull @Length(min = 5, max = 20) String password, @NotNull @Length(min = 5, max = 100) String name,
 			@NotNull @Length(min = 5, max = 100) String surname, @NotNull @Length(min = 5, max = 20) Integer phone,
@@ -36,6 +58,15 @@ public class UpdateResponse {
 		this.dni = dni;
 		this.address = address;
 	}
+	
+	public List<RoleServiceModel> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<RoleServiceModel> roles) {
+		this.roles = roles;
+	}
+
 	public String getEmail() {
 		return email;
 	}

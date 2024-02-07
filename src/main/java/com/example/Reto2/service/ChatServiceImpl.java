@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.Reto2.model.Chat;
@@ -265,12 +266,13 @@ public class ChatServiceImpl implements ChatService {
 
 		User userDetails = (User) authentication.getPrincipal();
 		UserServiceModel teacher = userService.findBy(userDetails.getId());
-
+		System.out.println(chatId +" " + userId +" ..");
 		Chat chat = chatRepository.findById(chatId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
-
+		System.out.println(chat.toString());
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Usuario no encontrado"));
+		System.out.println(chat.toString());
 
 		List<RoleServiceModel> teacherRoles = teacher.getRoles();
 

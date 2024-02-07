@@ -39,7 +39,7 @@ public class JwtTokenUtil {
 				.setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
 				.claim("userId", user.getId()) // podriamos meter datos custom, u objetos custom.
-				//.claim("roles", user.getRoles())
+				.claim("roles", user.getRoles())
 				// ojo con meter "user" por que tiene la password en el modelo 
 				// y passwords no queremos enviar ni devolver
 				.signWith(SignatureAlgorithm.HS512, SECRET_KEY)

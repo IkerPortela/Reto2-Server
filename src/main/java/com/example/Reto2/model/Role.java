@@ -19,7 +19,7 @@ public class Role {
 	
 
 	public Role() {}
-	public Role(Integer id, String name, RoleEnum roleType) {
+	public Role(Integer id, String name) {
 		super();
 		this.id = id;
 		this.name = name;

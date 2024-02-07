@@ -92,8 +92,12 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 	}
 
 	public User update(User user) {
-		
-		return userRepository.save(user);
+		User safe = new User(
+				user.getId(),
+				user.getEmail(),
+				user.getPassword(),
+				user.getName(),user.getSurname(),user.getPhone(),user.getDni(),user.getAddress());
+		return userRepository.save(safe);
 	}
 
 	@Override
@@ -156,5 +160,24 @@ public class UserServiceLmpl implements UserService, UserDetailsService {
 				user.getPassword());
 		
 		return response;
+	}
+
+	@Override
+	public RoleServiceModel getUserRol(Integer id) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new UsernameNotFoundException(HttpStatus.NO_CONTENT + "not found"));
+		
+		List<Role> userRoles = user.getRoles();
+    	RoleServiceModel convertedRoleList = new RoleServiceModel(); 
+    	for(Role role : userRoles) {
+    		RoleServiceModel roleServiceModel = new RoleServiceModel(
+    				role.getId(),
+    				role.getName()
+    		);
+			convertedRoleList = roleServiceModel;
+
+    	}
+    	
+		return convertedRoleList;
 	}
 }

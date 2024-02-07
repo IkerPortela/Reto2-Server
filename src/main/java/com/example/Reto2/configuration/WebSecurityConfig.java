@@ -57,7 +57,7 @@ public class WebSecurityConfig {
 						// podran hacer todos los metodos a dichas urls...
 
 						// LLAMADAS GET
-						.requestMatchers(HttpMethod.GET, "/api/auth/users", "/api/auth/me", "/api/auth/myInfo",
+						.requestMatchers(HttpMethod.GET, "/user/rol","/api/auth/users", "/api/auth/me", "/api/auth/myInfo",
 								"/api/auth/users")
 						.authenticated()
 
@@ -69,7 +69,7 @@ public class WebSecurityConfig {
 								"/api/messages/{chatId}")
 						.authenticated()
 						// LLAMADAS POST
-						.requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/signup").authenticated()
+						.requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/signup").permitAll()
 						.requestMatchers(HttpMethod.POST, "/api/chats", "/api/chats/assign", "/api/chats/join")
 						.authenticated()
 

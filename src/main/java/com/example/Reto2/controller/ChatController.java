@@ -49,7 +49,10 @@ public class ChatController {
 
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
+	
+	
+	
+	
 	@GetMapping("/chats")
 	public ResponseEntity<List<ChatServiceModel>> getUserChatsByAuth(Authentication authentication) {
 		User userDetails = (User) authentication.getPrincipal();

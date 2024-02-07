@@ -55,7 +55,6 @@ public class User implements UserDetails {
 			// relacion con la otra tabla (List<Role>)
 			inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_role_id")))
 	@JsonIgnore
-	@JsonManagedReference
 	private List<Role> roles;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -65,7 +64,6 @@ public class User implements UserDetails {
 			// relacion con la otra tabla (List<Chat>)
 			inverseJoinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_chat_id")))
 	@JsonIgnore
-    @JsonBackReference
 	private List<Chat> chats;
 
 
@@ -96,6 +94,7 @@ public class User implements UserDetails {
 		this.dni = dni;
 		this.address = address;
 	}
+	
 	public User(Integer id, String email, String password, List<Role> roles, List<Chat> chats) {
 		super();
 		this.id = id;
@@ -105,6 +104,20 @@ public class User implements UserDetails {
 		this.chats = chats;
 	}
 
+
+	public User(Integer id, String email, String password, String name, String surname, Integer phone, String dni,
+			String address, List<Role> roles) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.surname = surname;
+		this.phone = phone;
+		this.dni = dni;
+		this.address = address;
+		this.roles = roles;
+	}
 
 	public String getName() {
 		return name;
