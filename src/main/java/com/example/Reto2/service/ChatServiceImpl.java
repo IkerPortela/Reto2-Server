@@ -264,35 +264,46 @@ public class ChatServiceImpl implements ChatService {
 	@Override
 	public ChatServiceModel disassignFromChat(Authentication authentication, Integer chatId, Integer userId) {
 
-		User userDetails = (User) authentication.getPrincipal();
-		UserServiceModel teacher = userService.findBy(userDetails.getId());
+	    User userDetails = (User) authentication.getPrincipal();
+	    UserServiceModel teacher = userService.findBy(userDetails.getId());
 
-		Chat chat = chatRepository.findById(chatId)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
+	    Chat chat = chatRepository.findById(chatId)
+	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
 
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Usuario no encontrado"));
+	    User user = userRepository.findById(userId)
+	            .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Usuario no encontrado"));
 
-		List<RoleServiceModel> teacherRoles = teacher.getRoles();
+	    List<RoleServiceModel> teacherRoles = teacher.getRoles();
 
-		for (RoleServiceModel role : teacherRoles) {
-			if (role.getName().equals("Profesor")) {
-				chat.getUsers().remove(user);
-				chatRepository.save(chat);
-			} else {
-				throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-						"No tienes permisos para asignar a un usuario en este chat");
-			}
+	    boolean isTeacher = false;
+	    for (RoleServiceModel role : teacherRoles) {
+	        if (role.getName().equals("Profesor")) {
+	            isTeacher = true;
+	            break;
+	        }
+	    }
 
-		}
+	    if (!isTeacher) {
+	        throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+	                "No tienes permisos para asignar a un usuario en este chat");
+	    }
 
-		ChatServiceModel response = new ChatServiceModel(
-				chat.getId(), 
-				chat.getName(), 
-				chat.isPrivate(),
-				chat.getCreatorId());
-		return response;
+	    if (!chat.getUsers().contains(user)) {
+	        throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+	                "El usuario no está en la lista del chat");
+	    }
+
+	    chat.getUsers().remove(user);
+	    chatRepository.save(chat);
+
+	    ChatServiceModel response = new ChatServiceModel(
+	            chat.getId(),
+	            chat.getName(),
+	            chat.isPrivate(),
+	            chat.getCreatorId());
+	    return response;
 	}
+
 
 
 
