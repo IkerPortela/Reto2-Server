@@ -5,6 +5,9 @@ public class RoleServiceModel {
     private Integer id;
     private String name;
     
+    public RoleServiceModel() {
+    	
+    }
 	public RoleServiceModel(Integer id, String name) {
 		super();
 		this.id = id;

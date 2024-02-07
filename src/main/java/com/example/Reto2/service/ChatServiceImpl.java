@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.Reto2.model.Chat;
@@ -285,7 +286,10 @@ public class ChatServiceImpl implements ChatService {
 
 		}
 
-		ChatServiceModel response = new ChatServiceModel(chat.getId(), chat.getName(), chat.isPrivate(),
+		ChatServiceModel response = new ChatServiceModel(
+				chat.getId(), 
+				chat.getName(), 
+				chat.isPrivate(),
 				chat.getCreatorId());
 		return response;
 	}
