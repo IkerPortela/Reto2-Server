@@ -12,6 +12,7 @@ public interface MessageService {
 	Message createMessage(Message message);
 	MessageServiceModel updateMessage(Message message);
 	void deleteMessageById(Integer id);
-	
 
+	List<MessageServiceModel> getMessagesByChatInOrder(Integer chatId, Date created_at);
+	
 }
