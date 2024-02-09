@@ -42,9 +42,15 @@ public class MessageController {
 	}
 	
 	@GetMapping("/lastMessages")
-	public ResponseEntity<List<MessageServiceModel>> getChatLastMessages(@RequestParam("created_at") @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")Date androidDate ) {
-
-		return new ResponseEntity<List<MessageServiceModel>>(messageService.getMessagesInOrder(androidDate), HttpStatus.OK);
+	public ResponseEntity<List<MessageServiceModel>> getChatLastMessages(@RequestParam("created_at") @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")String androidDate ) {
+		SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date create_at = new Date();
+		try {
+			create_at = formato.parse(androidDate);
+		} catch (ParseException e) {
+		
+		}
+		return new ResponseEntity<List<MessageServiceModel>>(messageService.getMessagesInOrder(create_at), HttpStatus.OK);
 	}
 	
 
