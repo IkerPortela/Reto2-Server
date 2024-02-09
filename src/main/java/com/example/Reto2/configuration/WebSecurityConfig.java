@@ -68,7 +68,7 @@ public class WebSecurityConfig {
 								"/api/users/chat", "/users/chat/count")
 						.authenticated()
 						.requestMatchers(HttpMethod.GET, "/api/chats", "api/chats/noPrivate", "/api/chats/{userId}",
-								"/api/users/chat", "/users/chat/count", "/api/send-email","/api/lastMessages/{chatId}")
+								"/api/users/chat", "/users/chat/count", "/api/send-email","/api/lastMessages")
 						.permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/sockets/leave-room/{room}/{idUser}",
 								"/api/sockets/join-room/{room}/{idUser}", "/api/sockets/send-message",

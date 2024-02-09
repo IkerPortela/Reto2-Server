@@ -41,10 +41,10 @@ public class MessageController {
 		return new ResponseEntity<List<MessageServiceModel>>(messageService.getAllMessagesByChatId(chatid), HttpStatus.OK);
 	}
 	
-	@GetMapping("/lastMessages/{chatId}")
-	public ResponseEntity<List<MessageServiceModel>> getChatLastMessages(@PathVariable("chatId") int chatid,@RequestParam("created_at") @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")Date androidDate ) {
+	@GetMapping("/lastMessages")
+	public ResponseEntity<List<MessageServiceModel>> getChatLastMessages(@RequestParam("created_at") @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")Date androidDate ) {
 
-		return new ResponseEntity<List<MessageServiceModel>>(messageService.getMessagesByChatInOrder(chatid,androidDate), HttpStatus.OK);
+		return new ResponseEntity<List<MessageServiceModel>>(messageService.getMessagesInOrder(androidDate), HttpStatus.OK);
 	}
 	
 

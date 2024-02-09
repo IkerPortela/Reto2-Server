@@ -71,35 +71,28 @@ public class MessageServiceImpl implements MessageService {
 		messageRepository.deleteById(id);
 	}
 
-	@Override
-	public List<MessageServiceModel> getMessagesByChatInOrder(Integer chatId, Date created_at) {
-		Chat chat = chatRepository.findById(chatId)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
-		
-		List<Message> messages = chat.getMessages();
-		
-		List<MessageServiceModel> response = new ArrayList<>();
-		
-		for (Message message : messages) {
-		    try {
-		        if (message.getCreatedAt().after(created_at) || !(message.getCreatedAt() == null)) {
-		            MessageServiceModel messageServiceModel = new MessageServiceModel();
-		            messageServiceModel.setId(message.getId());
-		            messageServiceModel.setText(message.getText());
-		            messageServiceModel.setImagePath(message.getImagePath());
-		            messageServiceModel.setSend(message.isSend());
-		            messageServiceModel.setUserId(message.getUserId());
-		            messageServiceModel.setChatId(message.getChatId());
 
-		            response.add(messageServiceModel);
-		        }
-		    } catch (Exception e) {
+
+	@Override
+	public List<MessageServiceModel> getMessagesInOrder(Date created_at) {
+		Iterable<Message> messageIterable = messageRepository.findAll();
+	    List<MessageServiceModel> response = new ArrayList<>();
 	
-		    }
-		}
-		
-		
-		return response;
+	    for (Message message: messageIterable) {
+	    	if (message.getCreatedAt().after(created_at)&& !(message == null)) {
+	        	MessageServiceModel chatServiceModel = new MessageServiceModel(
+	        			message.getId(),
+	        			message.getText(),
+	        			message.getImagePath(),
+	        			message.isSend(),
+	        			message.getCreatedAt(),
+	        			message.getUserId(),
+	        			message.getChatId()
+	        			);
+	            response.add(chatServiceModel);
+	    	}
+	    }
+	    return response;
 	}
 
 }
