@@ -43,6 +43,7 @@ public class MessageServiceImpl implements MessageService{
 	        messageServiceModel.setSend(message.isSend());
 	        messageServiceModel.setUserId(message.getUserId());
 	        messageServiceModel.setChatId(message.getChatId());
+	        messageServiceModel.setCreated_at(message.getCreatedAt());
 	   
 	        
 	        response.add(messageServiceModel);

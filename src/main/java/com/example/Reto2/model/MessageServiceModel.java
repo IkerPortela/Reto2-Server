@@ -1,5 +1,7 @@
 package com.example.Reto2.model;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class MessageServiceModel {
@@ -8,6 +10,7 @@ public class MessageServiceModel {
 	private String text;
 	private String imagePath;
 	private boolean isSend;
+	private Date created_at;
 	
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Integer userId;
@@ -17,6 +20,22 @@ public class MessageServiceModel {
 
 	
 	public MessageServiceModel() {}
+	
+	
+
+	public MessageServiceModel(Integer id, String text, String imagePath, boolean isSend, Date created_at,
+			Integer userId, Integer chatId) {
+		super();
+		this.id = id;
+		this.text = text;
+		this.imagePath = imagePath;
+		this.isSend = isSend;
+		this.created_at = created_at;
+		this.userId = userId;
+		this.chatId = chatId;
+	}
+
+
 
 	public MessageServiceModel(Integer id, String text,
 			boolean isSend,  Integer userId,  Integer chatId) {
@@ -40,6 +59,16 @@ public class MessageServiceModel {
 		this.chatId = chatId;
 	
 	}
+
+	public Date getCreated_at() {
+		return created_at;
+	}
+
+
+	public void setCreated_at(Date created_at) {
+		this.created_at = created_at;
+	}
+
 
 	public Integer getId() {
 		return id;
