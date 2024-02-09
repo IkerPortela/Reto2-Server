@@ -1,19 +1,22 @@
 package com.example.Reto2.controller;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.Reto2.model.ChatPostRequest;
-import com.example.Reto2.model.ChatServiceModel;
 import com.example.Reto2.model.Message;
 import com.example.Reto2.model.MessageServiceModel;
 import com.example.Reto2.repository.MessageRepository;
@@ -38,6 +41,11 @@ public class MessageController {
 		return new ResponseEntity<List<MessageServiceModel>>(messageService.getAllMessagesByChatId(chatid), HttpStatus.OK);
 	}
 	
+	@GetMapping("/lastMessages/{chatId}")
+	public ResponseEntity<List<MessageServiceModel>> getChatLastMessages(@PathVariable("chatId") int chatid,@RequestParam("created_at") @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")Date androidDate ) {
 
+		return new ResponseEntity<List<MessageServiceModel>>(messageService.getMessagesByChatInOrder(chatid,androidDate), HttpStatus.OK);
+	}
+	
 
 }

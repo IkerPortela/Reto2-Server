@@ -1,11 +1,14 @@
 package com.example.Reto2.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.Reto2.model.Chat;
 import com.example.Reto2.model.Message;
@@ -71,6 +74,37 @@ public class MessageServiceImpl implements MessageService{
 	@Override
 	public void deleteMessageById(Integer id) {
 		messageRepository.deleteById(id);
+	}
+
+	@Override
+	public List<MessageServiceModel> getMessagesByChatInOrder(Integer chatId, Date created_at) {
+		Chat chat = chatRepository.findById(chatId)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT, "Chat no encontrado"));
+		
+		List<Message> messages = chat.getMessages();
+		
+		List<MessageServiceModel> response = new ArrayList<>();
+		
+		for (Message message : messages) {
+		    try {
+		        if (message.getCreatedAt().after(created_at) || !(message.getCreatedAt() == null)) {
+		            MessageServiceModel messageServiceModel = new MessageServiceModel();
+		            messageServiceModel.setId(message.getId());
+		            messageServiceModel.setText(message.getText());
+		            messageServiceModel.setImagePath(message.getImagePath());
+		            messageServiceModel.setSend(message.isSend());
+		            messageServiceModel.setUserId(message.getUserId());
+		            messageServiceModel.setChatId(message.getChatId());
+
+		            response.add(messageServiceModel);
+		        }
+		    } catch (Exception e) {
+	
+		    }
+		}
+		
+		
+		return response;
 	}
 
 }

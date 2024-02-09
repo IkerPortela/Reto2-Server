@@ -1,5 +1,6 @@
 package com.example.Reto2.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.example.Reto2.model.Message;
@@ -11,4 +12,6 @@ public interface MessageService {
 	Message createMessage(Message message);
 	MessageServiceModel updateMessage(Message message);
 	void deleteMessageById(Integer id);
+	List<MessageServiceModel> getMessagesByChatInOrder(Integer chatId, Date created_at);
+	
 }
